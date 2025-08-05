@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>HTML + JS Runner</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      padding: 1em;
+    }
+    textarea {
+      width: 100%;
+      height: 200px;
+      font-family: monospace;
+    }
+    iframe {
+      width: 100%;
+      height: 300px;
+      border: 1px solid #ccc;
+      margin-top: 1em;
+    }
+  </style>
+</head>
+<body>
+  <h1>HTML + JavaScript Runner</h1>
+
+  <textarea id="codeArea" placeholder="Paste your full HTML here..."></textarea>
+  <br>
+  <input id="urlInput" type="text" placeholder="https://example.com/raw.html" style="width: 100%;" />
+  <button onclick="loadCode()">Load from URL</button>
+  <button onclick="runCode()">Run Code</button>
+
+  <iframe id="preview" sandbox="allow-scripts allow-same-origin"></iframe>
+
+  <script>
+    function loadCode() {
+      const url = document.getElementById('urlInput').value;
+      fetch(url)
+        .then(res => res.text())
+        .then(code => {
+          document.getElementById('codeArea').value = code;
+          runCode();
+        })
+        .catch(err => alert('Error loading code: ' + err));
+    }
+
+    function runCode() {
+      const code = document.getElementById('codeArea').value;
+      const iframe = document.getElementById('preview');
+      const doc = iframe.contentWindow.document;
+      doc.open();
+      doc.write(code);
+      doc.close();
+    }
+
+    // Auto-load code from ?load=... URL param
+    window.onload = () => {
+      const params = new URLSearchParams(window.location.search);
+      const loadURL = params.get('load');
+      if (loadURL) {
+        document.getElementById('urlInput').value = loadURL;
+        loadCode();
+      }
+    };
+  </script>
+</body>
+</html>
