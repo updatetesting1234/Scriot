@@ -1,8 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>HTML + JS Runner</title>
+  <meta charset="UTF-8" />
+  <title>HTML + JS Runner - Fullscreen Run</title>
   <style>
     body {
       font-family: sans-serif;
@@ -13,11 +13,20 @@
       height: 200px;
       font-family: monospace;
     }
-    iframe {
-      width: 100%;
-      height: 300px;
-      border: 1px solid #ccc;
-      margin-top: 1em;
+    #status {
+      margin-top: 0.5em;
+      padding: 0.5em;
+      border-radius: 4px;
+    }
+    #status.error {
+      background: #fdd;
+      color: #900;
+      border: 1px solid #900;
+    }
+    #status.success {
+      background: #dfd;
+      color: #060;
+      border: 1px solid #060;
     }
   </style>
 </head>
@@ -25,43 +34,93 @@
   <h1>HTML + JavaScript Runner</h1>
 
   <textarea id="codeArea" placeholder="Paste your full HTML here..."></textarea>
-  <br>
-  <input id="urlInput" type="text" placeholder="https://example.com/raw.html" style="width: 100%;" />
+  <br />
+  <input
+    id="urlInput"
+    type="text"
+    placeholder="https://example.com/raw.html"
+    style="width: 100%;"
+  />
   <button onclick="loadCode()">Load from URL</button>
-  <button onclick="runCode()">Run Code</button>
+  <button onclick="runCode()">Run Code (Preview)</button>
+  <button onclick="runCodeAndFullscreen()">Run Code (Fullscreen)</button>
 
-  <iframe id="preview" sandbox="allow-scripts allow-same-origin"></iframe>
+  <div id="status"></div>
+
+  <iframe id="preview" sandbox="allow-scripts allow-same-origin" style="width: 100%; height: 300px; border: 1px solid #ccc; margin-top: 1em;"></iframe>
 
   <script>
-    function loadCode() {
-      const url = document.getElementById('urlInput').value;
-      fetch(url)
-        .then(res => res.text())
-        .then(code => {
-          document.getElementById('codeArea').value = code;
-          runCode();
-        })
-        .catch(err => alert('Error loading code: ' + err));
+    const statusEl = document.getElementById("status");
+
+    function setStatus(message, isError = false) {
+      statusEl.textContent = message;
+      statusEl.className = isError ? "error" : "success";
+    }
+
+    async function loadCode() {
+      const url = document.getElementById("urlInput").value.trim();
+      if (!url) {
+        setStatus("Please enter a URL.", true);
+        return;
+      }
+
+      setStatus("Loading code...");
+
+      try {
+        const response = await fetch(url, { mode: "cors" });
+        if (!response.ok) {
+          setStatus(
+            `Error loading code: HTTP ${response.status} ${response.statusText}`,
+            true
+          );
+          return;
+        }
+
+        const code = await response.text();
+        document.getElementById("codeArea").value = code;
+        setStatus("Code loaded successfully.");
+        runCode();
+      } catch (error) {
+        setStatus(
+          `Failed to fetch code from URL. Possible reasons:\n
+- URL is unreachable\n
+- CORS policy prevents loading\n
+- URL does not point to raw code\n
+\n
+Error details: ${error.message}`,
+          true
+        );
+      }
     }
 
     function runCode() {
-      const code = document.getElementById('codeArea').value;
-      const iframe = document.getElementById('preview');
+      const code = document.getElementById("codeArea").value;
+      const iframe = document.getElementById("preview");
       const doc = iframe.contentWindow.document;
       doc.open();
       doc.write(code);
       doc.close();
+      setStatus("Code running in preview iframe.");
+    }
+
+    function runCodeAndFullscreen() {
+      if (!confirm("This will replace the entire page with your code. Continue?")) return;
+      const code = document.getElementById("codeArea").value;
+      document.open();
+      document.write(code);
+      document.close();
     }
 
     // Auto-load code from ?load=... URL param
     window.onload = () => {
       const params = new URLSearchParams(window.location.search);
-      const loadURL = params.get('load');
+      const loadURL = params.get("load");
       if (loadURL) {
-        document.getElementById('urlInput').value = loadURL;
+        document.getElementById("urlInput").value = loadURL;
         loadCode();
       }
     };
   </script>
 </body>
 </html>
+
