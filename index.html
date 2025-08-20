@@ -1,172 +1,114 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <title>HTML + JS Runner with Proxy Load</title>
+  <meta charset="UTF-8">
+  <title>Code Runner with Proxy & Scaling</title>
   <style>
     body {
       font-family: sans-serif;
-      padding: 1em;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
     }
-    textarea {
+    #controls {
+      padding: 10px;
+      background: #333;
+      color: white;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+    #controls input, #controls textarea, #controls button {
+      padding: 6px;
+      font-size: 14px;
+    }
+    #codeArea {
       width: 100%;
-      height: 200px;
+      height: 150px;
       font-family: monospace;
     }
-    #status {
-      margin-top: 0.5em;
-      padding: 0.5em;
-      border-radius: 4px;
-    }
-    #status.error {
-      background: #fdd;
-      color: #900;
-      border: 1px solid #900;
-    }
-    #status.success {
-      background: #dfd;
-      color: #060;
-      border: 1px solid #060;
+    #preview {
+      flex: 1;
+      width: 100%;
+      border: none;
     }
   </style>
 </head>
 <body>
-  <h1>HTML + JavaScript Runner with Proxy Load</h1>
+  <div id="controls">
+    <button onclick="runCode()">▶ Run Code</button>
+    <input type="text" id="urlInput" placeholder="Enter website URL">
+    <button onclick="loadViaProxy()">🌐 Load via Proxy</button>
+  </div>
 
-  <textarea id="codeArea" placeholder="Paste your full HTML here..."></textarea>
-  <br />
-  <input
-    id="urlInput"
-    type="text"
-    placeholder="https://example.com/page.html"
-    style="width: 100%;"
-  />
-  <br /><br />
-  <button onclick="loadCode()">Load from URL</button>
-  <button onclick="loadViaProxy()">Load via Proxy</button>
-  <button onclick="runCode()">Run Code (Preview)</button>
-  <button onclick="runCodeAndFullscreen()">Run Code (Fullscreen)</button>
+  <textarea id="codeArea"><!DOCTYPE html>
+<html>
+<head>
+  <title>Test</title>
+</head>
+<body>
+  <h1>Hello world!</h1>
+  <p>This is a demo page.</p>
+</body>
+</html></textarea>
 
-  <div id="status"></div>
-
-  <iframe
-    id="preview"
-    sandbox="allow-scripts allow-same-origin"
-    style="width: 100%; height: 300px; border: 1px solid #ccc; margin-top: 1em;"
-  ></iframe>
+  <iframe id="preview"></iframe>
 
   <script>
-    const statusEl = document.getElementById("status");
-
-    function setStatus(message, isError = false) {
-      statusEl.textContent = message;
-      statusEl.className = isError ? "error" : "success";
-    }
-
-    async function loadCode() {
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) {
-        setStatus("Please enter a URL.", true);
-        return;
-      }
-      setStatus("Loading code...");
-
-      try {
-        const response = await fetch(url, { mode: "cors" });
-        if (!response.ok) {
-          setStatus(
-            `Error loading code: HTTP ${response.status} ${response.statusText}`,
-            true
+    function injectViewport(code) {
+      // If no viewport meta tag exists, add one inside <head>
+      if (!/viewport/i.test(code)) {
+        if (/<head.*?>/i.test(code)) {
+          code = code.replace(
+            /<head.*?>/i,
+            match => `${match}\n<meta name="viewport" content="width=device-width, initial-scale=1.0">`
           );
-          return;
-        }
-        const code = await response.text();
-        document.getElementById("codeArea").value = code;
-        setStatus("Code loaded successfully.");
-        runCode();
-      } catch (error) {
-        setStatus(
-          `Failed to fetch code from URL. Possible reasons:\n
-- URL is unreachable\n
-- CORS policy prevents loading\n
-- URL does not point to raw code\n
-\n
-Error details: ${error.message}`,
-          true
-        );
-      }
-    }
-
-    // New function: load using a public CORS proxy
-    async function loadViaProxy() {
-      const url = document.getElementById("urlInput").value.trim();
-      if (!url) {
-        setStatus("Please enter a URL.", true);
-        return;
-      }
-
-      // Change this proxy URL to another if needed
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
-
-      setStatus("Loading code via proxy...");
-
-      try {
-        const response = await fetch(proxyUrl + url, { mode: "cors" });
-        if (!response.ok) {
-          setStatus(
-            `Proxy error: HTTP ${response.status} ${response.statusText}`,
-            true
+        } else {
+          // If no <head>, insert one
+          code = code.replace(
+            /<html.*?>/i,
+            match => `${match}\n<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>`
           );
-          return;
         }
-        const code = await response.text();
-        document.getElementById("codeArea").value = code;
-        setStatus("Code loaded successfully via proxy.");
-        runCode();
-      } catch (error) {
-        setStatus(
-          `Failed to fetch code via proxy. Possible reasons:\n
-- Proxy server down or blocked\n
-- Target URL unreachable\n
-\n
-Error details: ${error.message}`,
-          true
-        );
       }
+      return code;
     }
 
     function runCode() {
-      const code = document.getElementById("codeArea").value;
-      const iframe = document.getElementById("preview");
-      const doc = iframe.contentWindow.document;
+      let code = document.getElementById('codeArea').value;
+      code = injectViewport(code);
+
+      const iframe = document.getElementById('preview');
+      const doc = iframe.contentDocument || iframe.contentWindow.document;
       doc.open();
       doc.write(code);
       doc.close();
-      setStatus("Code running in preview iframe.");
     }
 
-    function runCodeAndFullscreen() {
-      if (!confirm("This will replace the entire page with your code. Continue?"))
-        return;
-      const code = document.getElementById("codeArea").value;
-      document.open();
-      document.write(code);
-      document.close();
-    }
+    async function loadViaProxy() {
+      const url = document.getElementById("urlInput").value.trim();
+      if (!url) return alert("Enter a URL");
 
-    // Auto-load code from ?load=... URL param
-    window.onload = () => {
-      const params = new URLSearchParams(window.location.search);
-      const loadURL = params.get("load");
-      if (loadURL) {
-        document.getElementById("urlInput").value = loadURL;
-        loadCode();
+      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+
+      try {
+        const response = await fetch(proxyUrl + url);
+        let code = await response.text();
+
+        code = injectViewport(code);
+
+        document.getElementById("codeArea").value = code;
+        runCode();
+      } catch (e) {
+        alert("Could not load site: " + e.message);
       }
-    };
+    }
+
+    // Run default content on load
+    window.onload = runCode;
   </script>
 </body>
 </html>
-
-</body>
-</html>
-
