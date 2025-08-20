@@ -2,113 +2,124 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Code Runner with Proxy & Scaling</title>
+  <title>Code Loader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
   <style>
     body {
-      font-family: sans-serif;
       margin: 0;
       padding: 0;
+      font-family: monospace, sans-serif;
+      background: #111;
+      color: #eee;
       display: flex;
       flex-direction: column;
       height: 100vh;
+      overflow: hidden;
     }
-    #controls {
+    header {
+      background: #222;
       padding: 10px;
-      background: #333;
-      color: white;
+      flex-shrink: 0;
       display: flex;
-      flex-wrap: wrap;
       gap: 10px;
-      align-items: center;
     }
-    #controls input, #controls textarea, #controls button {
-      padding: 6px;
+    input, button {
+      padding: 8px;
       font-size: 14px;
-    }
-    #codeArea {
-      width: 100%;
-      height: 150px;
-      font-family: monospace;
-    }
-    #preview {
-      flex: 1;
-      width: 100%;
+      border-radius: 5px;
       border: none;
+    }
+    input {
+      flex-grow: 1;
+    }
+    #output {
+      flex-grow: 1;
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      font-size: clamp(10px, 3vw, 18px); /* scales text on mobile */
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+    #viewer {
+      flex-grow: 1;
+      display: none;
     }
   </style>
 </head>
 <body>
-  <div id="controls">
-    <button onclick="runCode()">▶ Run Code</button>
-    <input type="text" id="urlInput" placeholder="Enter website URL">
-    <button onclick="loadViaProxy()">🌐 Load via Proxy</button>
-  </div>
+  <header>
+    <input id="urlInput" type="text" placeholder="Enter URL with code">
+    <button onclick="loadCode()">Load</button>
+    <button onclick="proxyMode()">Proxy</button>
+  </header>
 
-  <textarea id="codeArea"><!DOCTYPE html>
-<html>
-<head>
-  <title>Test</title>
-</head>
-<body>
-  <h1>Hello world!</h1>
-  <p>This is a demo page.</p>
-</body>
-</html></textarea>
-
-  <iframe id="preview"></iframe>
+  <div id="output">Enter a URL above and press Load</div>
+  <div id="viewer"><iframe id="codeFrame"></iframe></div>
 
   <script>
-    function injectViewport(code) {
-      // If no viewport meta tag exists, add one inside <head>
-      if (!/viewport/i.test(code)) {
-        if (/<head.*?>/i.test(code)) {
-          code = code.replace(
-            /<head.*?>/i,
-            match => `${match}\n<meta name="viewport" content="width=device-width, initial-scale=1.0">`
-          );
-        } else {
-          // If no <head>, insert one
-          code = code.replace(
-            /<html.*?>/i,
-            match => `${match}\n<head><meta name="viewport" content="width=device-width, initial-scale=1.0"></head>`
-          );
-        }
-      }
-      return code;
-    }
-
-    function runCode() {
-      let code = document.getElementById('codeArea').value;
-      code = injectViewport(code);
-
-      const iframe = document.getElementById('preview');
-      const doc = iframe.contentDocument || iframe.contentWindow.document;
-      doc.open();
-      doc.write(code);
-      doc.close();
-    }
-
-    async function loadViaProxy() {
+    async function loadCode() {
       const url = document.getElementById("urlInput").value.trim();
-      if (!url) return alert("Enter a URL");
+      const output = document.getElementById("output");
+      const viewer = document.getElementById("viewer");
+      const frame = document.getElementById("codeFrame");
 
-      const proxyUrl = "https://cors-anywhere.herokuapp.com/";
+      output.style.display = "block";
+      viewer.style.display = "none";
+
+      if (!url) {
+        output.textContent = "⚠️ Please enter a URL.";
+        return;
+      }
 
       try {
-        const response = await fetch(proxyUrl + url);
-        let code = await response.text();
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
 
-        code = injectViewport(code);
+        const text = await response.text();
 
-        document.getElementById("codeArea").value = code;
-        runCode();
-      } catch (e) {
-        alert("Could not load site: " + e.message);
+        // Try to detect hidden <script> blocks or inline code
+        const scripts = [...text.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
+        let hiddenCode = scripts.length ? scripts.join("\n\n---SCRIPT---\n\n") : "No <script> tags found.";
+
+        // Show preview
+        output.textContent =
+          "✅ Code loaded successfully.\n\n" +
+          "=== Raw Content (first 500 chars) ===\n" +
+          text.substring(0, 500) + "\n...\n\n" +
+          "=== Extracted Scripts ===\n" + hiddenCode;
+
+        // Allow fullscreen rendering
+        frame.srcdoc = text;
+        output.style.display = "none";
+        viewer.style.display = "block";
+
+      } catch (err) {
+        output.textContent = "❌ Error loading code:\n" + err.message;
       }
     }
 
-    // Run default content on load
-    window.onload = runCode;
+    function proxyMode() {
+      const url = document.getElementById("urlInput").value.trim();
+      const output = document.getElementById("output");
+      const viewer = document.getElementById("viewer");
+      const frame = document.getElementById("codeFrame");
+
+      if (!url) {
+        output.textContent = "⚠️ Please enter a URL.";
+        return;
+      }
+
+      output.style.display = "none";
+      viewer.style.display = "block";
+      frame.src = url; // Acts as a proxy viewer
+    }
   </script>
 </body>
 </html>
