@@ -3,123 +3,113 @@
 <head>
   <meta charset="UTF-8">
   <title>Code Loader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
   <style>
     body {
       margin: 0;
-      padding: 0;
-      font-family: monospace, sans-serif;
+      font-family: monospace;
       background: #111;
       color: #eee;
       display: flex;
       flex-direction: column;
       height: 100vh;
-      overflow: hidden;
     }
     header {
       background: #222;
       padding: 10px;
-      flex-shrink: 0;
       display: flex;
       gap: 10px;
     }
     input, button {
       padding: 8px;
-      font-size: 14px;
       border-radius: 5px;
       border: none;
     }
-    input {
-      flex-grow: 1;
-    }
+    input { flex-grow: 1; }
     #output {
       flex-grow: 1;
       background: #000;
       color: #0f0;
       padding: 10px;
-      font-size: clamp(10px, 3vw, 18px); /* scales text on mobile */
-      overflow-y: auto;
       white-space: pre-wrap;
+      overflow-y: auto;
     }
+    #viewer { flex-grow: 1; display: none; }
     iframe {
-      border: none;
       width: 100%;
       height: 100%;
-    }
-    #viewer {
-      flex-grow: 1;
-      display: none;
+      border: none;
     }
   </style>
 </head>
+
 <body>
-  <header>
-    <input id="urlInput" type="text" placeholder="Enter URL with code">
-    <button onclick="loadCode()">Load</button>
-    <button onclick="proxyMode()">Proxy</button>
-  </header>
+<header>
+  <input id="urlInput" placeholder="Enter URL">
+  <button onclick="loadCode()">Load</button>
+  <button onclick="proxyMode()">Embed</button>
+</header>
 
-  <div id="output">Enter a URL above and press Load</div>
-  <div id="viewer"><iframe id="codeFrame"></iframe></div>
+<div id="output">Enter a URL and press Load</div>
+<div id="viewer">
+  <iframe id="codeFrame" sandbox="allow-scripts"></iframe>
+</div>
 
-  <script>
-    async function loadCode() {
-      const url = document.getElementById("urlInput").value.trim();
-      const output = document.getElementById("output");
-      const viewer = document.getElementById("viewer");
-      const frame = document.getElementById("codeFrame");
+<script>
+const PROXY_BASE = "http://YOUR_PC_IP:8080/";
 
-      output.style.display = "block";
-      viewer.style.display = "none";
+async function loadCode() {
+  const url = urlInput.value.trim();
+  if (!url) return;
 
-      if (!url) {
-        output.textContent = "⚠️ Please enter a URL.";
-        return;
-      }
+  output.style.display = "block";
+  viewer.style.display = "none";
 
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+  let html;
+  let viaProxy = false;
 
-        const text = await response.text();
+  try {
+    const r = await fetch(url);
+    if (!r.ok) throw 0;
+    html = await r.text();
+  } catch {
+    viaProxy = true;
+    const r = await fetch(PROXY_BASE + encodeURIComponent(url));
+    html = await r.text();
+  }
 
-        // Try to detect hidden <script> blocks or inline code
-        const scripts = [...text.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
-        let hiddenCode = scripts.length ? scripts.join("\n\n---SCRIPT---\n\n") : "No <script> tags found.";
+  const doc = new DOMParser().parseFromString(html, "text/html");
+  const scripts = [...doc.querySelectorAll("script")];
 
-        // Show preview
-        output.textContent =
-          "✅ Code loaded successfully.\n\n" +
-          "=== Raw Content (first 500 chars) ===\n" +
-          text.substring(0, 500) + "\n...\n\n" +
-          "=== Extracted Scripts ===\n" + hiddenCode;
+  if (!scripts.length && !viaProxy) {
+    viaProxy = true;
+    const r = await fetch(PROXY_BASE + encodeURIComponent(url));
+    html = await r.text();
+  }
 
-        // Allow fullscreen rendering
-        frame.srcdoc = text;
-        output.style.display = "none";
-        viewer.style.display = "block";
+  const parsed = new DOMParser().parseFromString(html, "text/html");
+  const finalScripts = [...parsed.querySelectorAll("script")];
 
-      } catch (err) {
-        output.textContent = "❌ Error loading code:\n" + err.message;
-      }
-    }
+  output.textContent =
+    `Loaded via: ${viaProxy ? "HTTP SERVER PROXY" : "DIRECT FETCH"}\n\n` +
+    (finalScripts.length
+      ? finalScripts.map(s => s.textContent).join("\n\n---SCRIPT---\n\n")
+      : "No script tags found.");
 
-    function proxyMode() {
-      const url = document.getElementById("urlInput").value.trim();
-      const output = document.getElementById("output");
-      const viewer = document.getElementById("viewer");
-      const frame = document.getElementById("codeFrame");
+  codeFrame.srcdoc = html;
+  output.style.display = "none";
+  viewer.style.display = "block";
+}
 
-      if (!url) {
-        output.textContent = "⚠️ Please enter a URL.";
-        return;
-      }
-
-      output.style.display = "none";
-      viewer.style.display = "block";
-      frame.src = url; // Acts as a proxy viewer
-    }
-  </script>
+function proxyMode() {
+  const url = urlInput.value.trim();
+  if (!url) return;
+  viewer.style.display = "block";
+  output.style.display = "none";
+  codeFrame.removeAttribute("sandbox");
+  codeFrame.src = url;
+}
+</script>
 </body>
 </html>
