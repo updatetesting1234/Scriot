@@ -1,163 +1,149 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>Advanced Code Loader</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<style>
-body {
-    margin: 0;
-    font-family: monospace, sans-serif;
-    background: #111;
-    color: #eee;
-    display: flex;
-    flex-direction: column;
-    height: 100vh;
-}
-header {
-    background: #222;
-    padding: 10px;
-    display: flex;
-    gap: 10px;
-}
-input, button {
-    padding: 8px;
-    border-radius: 5px;
-    border: none;
-}
-input { flex-grow: 1; }
-#output {
-    flex-grow: 1;
-    background: #000;
-    color: #0f0;
-    padding: 10px;
-    white-space: pre-wrap;
-    overflow-y: auto;
-}
-#viewer { flex-grow: 1; display: none; }
-iframe {
-    width: 100%;
-    height: 100%;
-    border: none;
-}
-</style>
+  <meta charset="UTF-8">
+  <title>Code Loader</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: monospace, sans-serif;
+      background: #111;
+      color: #eee;
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
+    }
+    header {
+      background: #222;
+      padding: 10px;
+      flex-shrink: 0;
+      display: flex;
+      gap: 10px;
+    }
+    input, button {
+      padding: 8px;
+      font-size: 14px;
+      border-radius: 5px;
+      border: none;
+    }
+    input {
+      flex-grow: 1;
+    }
+    #output {
+      flex-grow: 1;
+      background: #000;
+      color: #0f0;
+      padding: 10px;
+      font-size: clamp(10px, 3vw, 18px);
+      overflow-y: auto;
+      white-space: pre-wrap;
+    }
+    iframe {
+      border: none;
+      width: 100%;
+      height: 100%;
+    }
+    #viewer {
+      flex-grow: 1;
+      display: none;
+    }
+  </style>
 </head>
 <body>
+  <header>
+    <input id="urlInput" type="text" placeholder="Enter URL with code">
+    <button onclick="loadCode()">Load</button>
+    <button onclick="proxyFetch()">Proxy</button>
+  </header>
 
-<header>
-    <input id="urlInput" placeholder="Enter URL">
-    <button onclick="loadDirect()">Load Direct</button>
-    <button onclick="loadQueuedProxy()">Load Proxy</button>
-    <button onclick="loadIframeProxy()">Load iFrame</button>
-</header>
+  <div id="output">Enter a URL above and press Load or Proxy</div>
+  <div id="viewer"><iframe id="codeFrame"></iframe></div>
 
-<div id="output">Enter a URL and select a load method</div>
-<div id="viewer">
-    <iframe id="codeFrame" sandbox="allow-scripts"></iframe>
-</div>
+  <script>
+    // ------------------------
+    // Normal Load (fetch from browser)
+    // ------------------------
+    async function loadCode() {
+      const url = document.getElementById("urlInput").value.trim();
+      const output = document.getElementById("output");
+      const viewer = document.getElementById("viewer");
+      const frame = document.getElementById("codeFrame");
 
-<script>
-const PROXY_BASE = "http://YOUR_PC_IP:8080"; // change to your server IP
+      output.style.display = "block";
+      viewer.style.display = "none";
 
-const urlInput = document.getElementById("urlInput");
-const output = document.getElementById("output");
-const viewer = document.getElementById("viewer");
-const codeFrame = document.getElementById("codeFrame");
+      if (!url) {
+        output.textContent = "⚠️ Please enter a URL.";
+        return;
+      }
 
-// ------------------------
-// Direct fetch option
-// ------------------------
-async function loadDirect() {
-    const url = urlInput.value.trim();
-    if (!url) return showError("⚠️ Please enter a URL.");
+      try {
+        const response = await fetch(url);
+        if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
 
-    output.style.display = "block";
-    viewer.style.display = "none";
-    output.textContent = "Attempting direct fetch...";
+        const text = await response.text();
 
-    try {
-        const res = await fetch(url);
-        if (!res.ok) throw new Error(`HTTP ${res.status}`);
-        const html = await res.text();
-        displayContent(html);
-    } catch (err) {
-        showError(`Direct fetch failed:\n${err.message}`);
+        // Try to detect <script> blocks
+        const scripts = [...text.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
+        let hiddenCode = scripts.length ? scripts.join("\n\n---SCRIPT---\n\n") : "No <script> tags found.";
+
+        // Preview first 500 chars
+        output.textContent =
+          "✅ Code loaded successfully.\n\n" +
+          "=== Raw Content (first 500 chars) ===\n" +
+          text.substring(0, 500) + "\n...\n\n" +
+          "=== Extracted Scripts ===\n" + hiddenCode;
+
+        // Render fullscreen
+        frame.srcdoc = text;
+        output.style.display = "none";
+        viewer.style.display = "block";
+
+      } catch (err) {
+        output.textContent = "❌ Error loading code:\n" + err.message;
+      }
     }
-}
 
-// ------------------------
-// Queued proxy option
-// ------------------------
-async function loadQueuedProxy() {
-    const url = urlInput.value.trim();
-    if (!url) return showError("⚠️ Please enter a URL.");
+    // ------------------------
+    // Proxy fetch (via your PC server)
+    // ------------------------
+    async function proxyFetch() {
+      const url = document.getElementById("urlInput").value.trim();
+      const output = document.getElementById("output");
+      const viewer = document.getElementById("viewer");
+      const frame = document.getElementById("codeFrame");
 
-    output.style.display = "block";
-    viewer.style.display = "none";
-    output.textContent = "Submitting to queued proxy...";
+      if (!url) {
+        output.textContent = "⚠️ Please enter a URL.";
+        return;
+      }
 
-    try {
-        // Step 1: submit job
-        const submitRes = await fetch(`${PROXY_BASE}/submit`, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ url: url, deviceId: crypto.randomUUID() })
+      output.style.display = "block";
+      viewer.style.display = "none";
+      output.textContent = "⏳ Fetching via server proxy...";
+
+      try {
+        const resp = await fetch("http://YOUR_PC_IP:8080/fetch", { // change YOUR_PC_IP
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ url })
         });
 
-        if (!submitRes.ok) throw new Error(`Submit failed: ${submitRes.status}`);
-        const submitData = await submitRes.json();
-        const jobId = submitData.jobId;
+        if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
+        const html = await resp.text();
 
-        output.textContent = `Job submitted. Polling for result (ID: ${jobId})...`;
-
-        // Step 2: poll result
-        let result;
-        do {
-            await new Promise(r => setTimeout(r, 500));
-            const r = await fetch(`${PROXY_BASE}/result?id=${jobId}`);
-            result = await r.json();
-        } while (result.status === "pending");
-
-        if (result.status === "ok") {
-            displayContent(result.content);
-        } else {
-            showError(`Proxy fetch error: ${result.error}`);
-        }
-
-    } catch (err) {
-        showError(`Queued proxy failed:\n${err.message}`);
+        frame.srcdoc = html;
+        output.style.display = "none";
+        viewer.style.display = "block";
+      } catch (err) {
+        output.textContent = "❌ Proxy fetch failed:\n" + err.message;
+      }
     }
-}
-
-// ------------------------
-// iFrame fallback proxy
-// ------------------------
-function loadIframeProxy() {
-    const url = urlInput.value.trim();
-    if (!url) return showError("⚠️ Please enter a URL.");
-
-    output.style.display = "none";
-    viewer.style.display = "block";
-    codeFrame.removeAttribute("sandbox");
-    codeFrame.src = url;
-}
-
-// ------------------------
-// Helpers
-// ------------------------
-function displayContent(html) {
-    codeFrame.srcdoc = html;
-    output.style.display = "none";
-    viewer.style.display = "block";
-}
-
-function showError(msg) {
-    output.style.display = "block";
-    viewer.style.display = "none";
-    output.textContent = `❌ ${msg}`;
-}
-</script>
+  </script>
 </body>
 </html>
+
 
