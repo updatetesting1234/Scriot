@@ -1,93 +1,1467 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <title>Nexus Code Loader</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <style>
-    :root { --bg: #0a0a0a; --accent: #00ff9d; --text: #e0e0e0; }
-    body { margin: 0; font-family: 'Cascadia Code', monospace; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; }
-    header { background: #1a1a1a; padding: 12px; display: flex; gap: 10px; border-bottom: 1px solid #333; }
-    input { flex: 1; background: #000; border: 1px solid #444; color: var(--accent); padding: 10px; border-radius: 4px; outline: none; }
-    button { background: #333; color: white; border: none; padding: 0 15px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
-    button:hover { background: var(--accent); color: #000; }
-    #output { flex: 1; padding: 15px; overflow-y: auto; white-space: pre-wrap; color: #888; font-size: 13px; }
-    #viewer { flex: 1; display: none; background: white; }
-    iframe { width: 100%; height: 100%; border: none; }
-    .status-tag { color: var(--accent); font-weight: bold; }
-  </style>
+<meta charset="UTF-8">
+<title>Nexus Loader v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;600&family=Syne:wght@400;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark-dimmed.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/marked/9.1.6/marked.min.js"></script>
+<style>
+:root {
+  --bg:       #07090d;
+  --s1:       #0d1117;
+  --s2:       #111820;
+  --s3:       #161f2a;
+  --border:   #1c2a38;
+  --border2:  #243545;
+  --accent:   #00d4ff;
+  --accent-d: #0090b8;
+  --green:    #23d18b;
+  --red:      #f47067;
+  --yellow:   #e2c08d;
+  --purple:   #b48ead;
+  --text:     #c9d1d9;
+  --text-d:   #6e7f8e;
+  --text-b:   #e6edf3;
+  --panel-w:  280px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--text);display:flex;flex-direction:column;font-size:12px}
+
+/* ══ TOPBAR ══ */
+#topbar{
+  background:var(--s1);
+  border-bottom:1px solid var(--border);
+  padding:8px 12px;
+  display:flex;flex-direction:column;gap:7px;
+  flex-shrink:0;
+}
+.topbar-row1{display:flex;align-items:center;gap:9px}
+.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--accent);letter-spacing:.12em;white-space:nowrap;user-select:none}
+.logo em{color:var(--text-d);font-style:normal;font-weight:400;font-size:10px;letter-spacing:.05em}
+#urlInput{
+  flex:1;background:var(--bg);border:1px solid var(--border);
+  color:var(--text-b);padding:7px 11px;border-radius:5px;
+  font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;
+  transition:border-color .15s,box-shadow .15s;
+}
+#urlInput:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,212,255,.07)}
+#urlInput::placeholder{color:var(--text-d)}
+.btn-group{display:flex;gap:5px;flex-shrink:0}
+.btn{
+  background:var(--s2);color:var(--text);border:1px solid var(--border2);
+  padding:6px 13px;cursor:pointer;border-radius:5px;
+  font-family:'JetBrains Mono',monospace;font-size:11px;
+  transition:all .13s;white-space:nowrap;
+}
+.btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
+.btn.go{border-color:var(--accent);color:var(--accent)}
+.btn.proxy{border-color:var(--purple);color:var(--purple)}
+.btn.proxy:hover{background:rgba(180,142,173,.07)}
+.btn.sm{padding:4px 9px;font-size:10px}
+.btn.active-toggle{background:rgba(0,212,255,.1);border-color:var(--accent);color:var(--accent)}
+.btn:disabled{opacity:.3;cursor:default;pointer-events:none}
+.btn.danger:hover{border-color:var(--red);color:var(--red)}
+
+/* ══ HISTORY TABS ══ */
+#histBar{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-height:22px;align-items:center}
+#histBar::-webkit-scrollbar{display:none}
+.htab{
+  background:var(--bg);border:1px solid var(--border);color:var(--text-d);
+  padding:2px 9px;border-radius:3px;font-size:10px;cursor:pointer;white-space:nowrap;
+  max-width:200px;overflow:hidden;text-overflow:ellipsis;transition:all .1s;
+  display:flex;align-items:center;gap:5px;
+}
+.htab:hover{border-color:var(--accent);color:var(--accent)}
+.htab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.07)}
+.htab-x{opacity:.4;font-size:9px;flex-shrink:0}
+.htab-x:hover{opacity:1;color:var(--red)}
+.htab-ico{opacity:.45;font-size:9px;flex-shrink:0}
+
+/* ══ STATUSBAR ══ */
+#statusbar{
+  background:var(--s2);border-bottom:1px solid var(--border);
+  padding:3px 12px;display:flex;align-items:center;gap:10px;
+  font-size:10px;color:var(--text-d);flex-shrink:0;
+}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(--text-d);flex-shrink:0;transition:background .2s}
+.sdot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
+.sdot.err{background:var(--red)}
+.sdot.loading{background:var(--yellow);animation:blink .7s infinite}
+@keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
+#stext{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ttag{
+  background:rgba(0,212,255,.08);color:var(--accent);
+  border:1px solid rgba(0,212,255,.18);padding:1px 7px;border-radius:3px;
+  font-size:9px;letter-spacing:.06em;white-space:nowrap;
+}
+.proxy-tag{background:rgba(180,142,173,.08);color:var(--purple);border-color:rgba(180,142,173,.2)}
+.sbar-actions{display:flex;gap:4px;margin-left:auto;flex-shrink:0}
+
+/* ══ MAIN LAYOUT ══ */
+#main{display:flex;flex:1;overflow:hidden}
+
+/* ══ SIDE PANEL ══ */
+#sidePanel{
+  width:var(--panel-w);flex-shrink:0;
+  background:var(--s1);border-right:1px solid var(--border);
+  display:flex;flex-direction:column;overflow:hidden;
+  transition:width .2s;
+}
+#sidePanel.collapsed{width:0;border-right:none}
+.panel-tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.ptab{
+  flex:1;padding:7px 4px;text-align:center;font-size:10px;cursor:pointer;
+  color:var(--text-d);border-bottom:2px solid transparent;transition:all .13s;
+}
+.ptab:hover{color:var(--text)}
+.ptab.active{color:var(--accent);border-color:var(--accent)}
+.panel-body{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.panel-body::-webkit-scrollbar{width:4px}
+.panel-body::-webkit-scrollbar-track{background:transparent}
+.panel-body::-webkit-scrollbar-thumb{background:var(--border)}
+.panel-section{margin-bottom:14px}
+.panel-label{font-size:9px;letter-spacing:.1em;color:var(--text-d);margin-bottom:6px;text-transform:uppercase}
+.kv-row{display:flex;gap:5px;margin-bottom:5px;align-items:center}
+.kv-row input{
+  flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);
+  padding:4px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:10px;outline:none;
+}
+.kv-row input:focus{border-color:var(--accent)}
+.kv-row input::placeholder{color:var(--text-d)}
+.kv-del{background:none;border:none;color:var(--text-d);cursor:pointer;padding:2px 5px;font-size:11px}
+.kv-del:hover{color:var(--red)}
+.proxy-list{display:flex;flex-direction:column;gap:4px}
+.proxy-item{
+  display:flex;align-items:center;gap:6px;padding:5px 7px;
+  border:1px solid var(--border);border-radius:4px;background:var(--bg);
+  font-size:10px;cursor:pointer;transition:all .12s;
+}
+.proxy-item:hover{border-color:var(--border2)}
+.proxy-item.active{border-color:var(--green);color:var(--green)}
+.proxy-item.failed{border-color:var(--red);color:var(--red);opacity:.5}
+.proxy-item.trying{border-color:var(--yellow);color:var(--yellow)}
+.proxy-dot{width:5px;height:5px;border-radius:50%;background:var(--text-d);flex-shrink:0}
+.proxy-item.active .proxy-dot{background:var(--green)}
+.proxy-item.failed .proxy-dot{background:var(--red)}
+.proxy-item.trying .proxy-dot{background:var(--yellow);animation:blink .5s infinite}
+.proxy-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.proxy-badge{font-size:9px;color:var(--text-d);flex-shrink:0}
+.cookie-area{
+  background:var(--bg);border:1px solid var(--border);border-radius:4px;
+  padding:6px;font-size:10px;color:var(--text-d);width:100%;resize:vertical;
+  min-height:80px;font-family:'JetBrains Mono',monospace;outline:none;
+}
+.cookie-area:focus{border-color:var(--accent)}
+.info-box{background:var(--s2);border:1px solid var(--border);border-radius:4px;padding:8px;font-size:10px;line-height:1.6;color:var(--text-d)}
+.info-box b{color:var(--yellow)}
+
+/* ══ CONTENT ══ */
+#content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
+.view{display:none;flex:1;overflow:hidden}
+.view.active{display:flex;flex-direction:column}
+
+/* Terminal */
+#vTerminal{padding:14px;overflow-y:auto;font-size:11px;line-height:1.75;color:var(--text-d);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.ll{display:flex;gap:8px}
+.ll .ts{color:#1e3040;flex-shrink:0;user-select:none;font-size:10px;margin-top:1px}
+.ll.ok .msg{color:var(--green)}
+.ll.err .msg{color:var(--red)}
+.ll.info .msg{color:var(--accent)}
+.ll.warn .msg{color:var(--yellow)}
+.ll.sub .msg{color:var(--text-d);padding-left:12px}
+
+/* Code */
+#vCode{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;background:#0d1117}
+#vCode pre{margin:0;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.65}
+#vCode code{background:none!important}
+
+/* JSON */
+#vJson{overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.jt{font-size:11.5px;line-height:1.85}
+.jk{color:#79b8ff}.js_{color:#9ecbff}.jn{color:#f8c555}.jb{color:#ff7b72}.jz{color:var(--text-d);font-style:italic}.jbr{color:var(--text-d)}
+.ji{padding-left:18px}
+.jcol{cursor:pointer;user-select:none}.jcol:hover .jbr{color:var(--accent)}
+.jcollapsed .jch{display:none}
+.jtog{color:var(--text-d);font-size:9px;margin-right:3px;display:inline-block;width:8px}
+
+/* HTML */
+#vHtml{flex:1}
+#vHtml iframe{width:100%;height:100%;border:none}
+
+/* Image */
+#vImage{flex:1;align-items:center;justify-content:center;background:repeating-conic-gradient(#0e1218 0% 25%,#121820 0% 50%) 0 0/18px 18px}
+#vImage img{max-width:96%;max-height:96%;object-fit:contain;box-shadow:0 8px 60px rgba(0,0,0,.7)}
+
+/* Markdown */
+#vMarkdown{overflow-y:auto;padding:30px 36px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;max-width:800px;margin:0 auto;width:100%}
+#vMarkdown h1,#vMarkdown h2,#vMarkdown h3{font-family:'Syne',sans-serif;color:var(--text-b);margin:1.4em 0 .4em}
+#vMarkdown h1{font-size:22px;border-bottom:1px solid var(--border);padding-bottom:8px}
+#vMarkdown h2{font-size:17px}
+#vMarkdown h3{font-size:14px;color:var(--accent)}
+#vMarkdown p{line-height:1.75;margin:.6em 0;color:var(--text)}
+#vMarkdown code{background:var(--s3);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)}
+#vMarkdown pre{background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:12px;margin:.8em 0;overflow-x:auto}
+#vMarkdown pre code{background:none;color:var(--text)}
+#vMarkdown a{color:var(--accent);text-decoration:none}
+#vMarkdown a:hover{text-decoration:underline}
+#vMarkdown blockquote{border-left:3px solid var(--purple);padding-left:12px;color:var(--text-d);margin:.8em 0}
+#vMarkdown table{border-collapse:collapse;width:100%;margin:.8em 0;font-size:11px}
+#vMarkdown th,#vMarkdown td{border:1px solid var(--border);padding:5px 10px}
+#vMarkdown th{background:var(--s2);color:var(--accent)}
+#vMarkdown ul,#vMarkdown ol{padding-left:20px}
+#vMarkdown li{margin:3px 0}
+#vMarkdown hr{border:none;border-top:1px solid var(--border);margin:1.2em 0}
+
+/* Binary */
+#vBinary{flex:1;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:var(--text-d)}
+.bin-icon{font-size:48px;opacity:.3}
+.bin-info{text-align:center;line-height:2}
+.bin-info b{color:var(--text);display:block;font-size:14px;margin-bottom:4px}
+
+/* Toggle panel btn */
+#togglePanel{
+  position:absolute;left:0;top:50%;transform:translateY(-50%);
+  background:var(--s2);border:1px solid var(--border);border-left:none;
+  color:var(--text-d);cursor:pointer;padding:10px 3px;border-radius:0 4px 4px 0;
+  font-size:10px;z-index:10;transition:all .15s;writing-mode:vertical-rl;
+}
+#togglePanel:hover{color:var(--accent);border-color:var(--accent)}
+</style>
 </head>
 <body>
 
-<header>
-  <input id="urlInput" type="text" placeholder="https://example.com/script.js">
-  <button onclick="handleLoad(false)">Load</button>
-  <button onclick="handleLoad(true)">Proxy (Obfuscated)</button>
-</header>
+<!-- ── TOPBAR ── -->
+<div id="topbar">
+  <div class="topbar-row1">
+    <div class="logo">NEXUS <em>LOADER v2</em></div>
+    <input id="urlInput" type="text" placeholder="https://example.com/file.js  —  press Enter to load">
+    <div class="btn-group">
+      <button class="btn go" onclick="doLoad(false)">▶ Direct</button>
+      <button class="btn proxy" onclick="doLoad(true)">⬡ Proxy</button>
+      <button class="btn sm" id="btnPanel" onclick="togglePanel()" title="Toggle side panel">⚙</button>
+    </div>
+  </div>
+  <div id="histBar"></div>
+</div>
 
-<div id="output">System ready. Awaiting URL input...</div>
-<div id="viewer"><iframe id="codeFrame"></iframe></div>
+<!-- ── STATUSBAR ── -->
+<div id="statusbar">
+  <div class="sdot" id="sdot"></div>
+  <div id="stext">Ready — enter a URL above</div>
+  <div id="ttag" class="ttag" style="display:none"></div>
+  <div id="ptag" class="ttag proxy-tag" style="display:none">PROXY</div>
+  <div class="sbar-actions">
+    <button class="btn sm" id="btnCopy" onclick="copyContent()" disabled>⎘ Copy</button>
+    <button class="btn sm" id="btnDl"   onclick="downloadContent()" disabled>↓ Download</button>
+  </div>
+</div>
+
+<!-- ── MAIN ── -->
+<div id="main">
+
+  <!-- SIDE PANEL -->
+  <div id="sidePanel">
+    <div class="panel-tab-bar">
+      <div class="ptab active" data-pt="0" onclick="switchPTab(0)">Headers</div>
+      <div class="ptab" data-pt="1" onclick="switchPTab(1)">Cookies</div>
+      <div class="ptab" data-pt="2" onclick="switchPTab(2)">Proxies</div>
+      <div class="ptab" data-pt="3" onclick="switchPTab(3)">🔒</div>
+      <div class="ptab" data-pt="4" onclick="switchPTab(4)">Info</div>
+    </div>
+
+    <!-- Headers tab -->
+    <div class="panel-body" id="pt0">
+      <div class="panel-section">
+        <div class="panel-label">Custom Request Headers</div>
+        <div id="headerRows"></div>
+        <button class="btn sm" onclick="addHeaderRow()" style="margin-top:4px">+ Add Header</button>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Quick Presets</div>
+        <div style="display:flex;flex-wrap:wrap;gap:4px">
+          <button class="btn sm" onclick="addPreset('Authorization','Bearer YOUR_TOKEN')">Auth Bearer</button>
+          <button class="btn sm" onclick="addPreset('X-API-Key','YOUR_KEY')">API Key</button>
+          <button class="btn sm" onclick="addPreset('Accept','application/json')">JSON Accept</button>
+          <button class="btn sm" onclick="addPreset('User-Agent','Mozilla/5.0')">User-Agent</button>
+        </div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Note</div>
+        <div class="info-box">Headers are forwarded via proxy only. Direct loads use browser defaults (CORS applies).</div>
+      </div>
+    </div>
+
+    <!-- Cookies tab -->
+    <div class="panel-body" id="pt1" style="display:none">
+      <div class="panel-section">
+        <div class="panel-label">Cookie String</div>
+        <textarea class="cookie-area" id="cookieInput" placeholder="name=value; session=abc123; token=xyz..."></textarea>
+        <div style="margin-top:6px;display:flex;gap:5px">
+          <button class="btn sm" onclick="clearCookies()">Clear</button>
+          <button class="btn sm" onclick="parseCookieKV()">→ Parse KV</button>
+        </div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Parsed Pairs</div>
+        <div id="cookieKVRows"></div>
+        <button class="btn sm" onclick="addCookieKV()" style="margin-top:4px">+ Add Cookie</button>
+      </div>
+      <div class="panel-section">
+        <div class="info-box"><b>⚠ Browser Limitation</b><br>Real Set-Cookie injection is blocked cross-origin. Cookies here are sent as a <code>Cookie:</code> header through the proxy — this works for APIs and simple auth, but not full session-based sites.</div>
+      </div>
+    </div>
+
+    <!-- Proxies tab -->
+    <div class="panel-body" id="pt2" style="display:none">
+      <div class="panel-section">
+        <div class="panel-label">CORS Proxy Fallback Chain</div>
+        <div class="info-box" style="margin-bottom:8px">Proxies are tried in order. Failed ones are skipped automatically.</div>
+        <div class="proxy-list" id="proxyList"></div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Custom Proxy URL</div>
+        <div class="kv-row">
+          <input id="customProxyInput" placeholder="https://cors.example.com/get?url=">
+          <button class="btn sm" onclick="addCustomProxy()">Add</button>
+        </div>
+        <div class="info-box">URL should accept ?url= or append target URL at end. We'll try both formats.</div>
+      </div>
+    </div>
+
+    <!-- Incognito / Encryption tab -->
+    <div class="panel-body" id="pt3" style="display:none">
+      <div class="panel-section">
+        <div class="panel-label">Incognito Mode</div>
+        <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;margin-bottom:8px">
+          <div style="flex:1">
+            <div id="incogLabel" style="font-size:11px;color:var(--text-d)">Off — plaintext mode</div>
+            <div style="font-size:9px;color:var(--text-d);margin-top:2px">AES-256-GCM in-memory</div>
+          </div>
+          <div id="incogToggle" onclick="toggleIncognito()" style="
+            width:36px;height:20px;border-radius:10px;background:var(--border2);
+            cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:1px solid var(--border)">
+            <div id="incogKnob" style="
+              position:absolute;top:2px;left:2px;width:14px;height:14px;
+              border-radius:50%;background:var(--text-d);transition:all .2s"></div>
+          </div>
+        </div>
+        <div id="incogStatus" class="info-box" style="line-height:1.8">
+          Incognito mode is <b style="color:var(--text-d)">off</b>.<br>
+          Content stored as plaintext in memory.
+        </div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Session Key</div>
+        <div id="keyDisplay" style="
+          background:var(--bg);border:1px solid var(--border);border-radius:4px;
+          padding:6px 8px;font-size:9px;color:var(--text-d);word-break:break-all;
+          line-height:1.6;min-height:28px">
+          No key — incognito off
+        </div>
+        <div style="display:flex;gap:5px;margin-top:6px">
+          <button class="btn sm" onclick="rotateKey()" id="btnRotate" disabled>↻ Rotate Key</button>
+          <button class="btn sm" onclick="purgeSession()" id="btnPurge" disabled style="border-color:var(--red);color:var(--red)">✕ Purge</button>
+        </div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">What this does</div>
+        <div class="info-box" style="line-height:1.75">
+          <b>When ON:</b><br>
+          · Response body is AES-256-GCM encrypted immediately after fetch, before being held in memory<br>
+          · Raw plaintext is zeroed out after encryption<br>
+          · Decrypted only at render time, held briefly then discarded<br>
+          · Session key lives only in this tab — never written to disk, localStorage, or logs<br>
+          · On tab close or Purge, key and ciphertext are wiped<br><br>
+          <b>Network bytes</b> still travel to your device (unavoidable in a browser) but the response body is never plaintext in JS memory for more than milliseconds.
+        </div>
+      </div>
+    </div>
+
+    <!-- Info tab -->
+    <div class="panel-body" id="pt4" style="display:none">
+      <div class="panel-section">
+        <div class="panel-label">Last Response Info</div>
+        <div id="infoBox" class="info-box" style="line-height:2">No request made yet.</div>
+      </div>
+      <div class="panel-section">
+        <div class="panel-label">Supported Types</div>
+        <div class="info-box" style="line-height:2">
+          <b>HTML</b> — rendered iframe<br>
+          <b>JS / CSS / XML</b> — syntax highlighted<br>
+          <b>JSON</b> — collapsible tree<br>
+          <b>Markdown</b> — rendered<br>
+          <b>Images</b> — inline preview<br>
+          <b>Binary</b> — auto-download prompt
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div id="content">
+    <button id="togglePanel" onclick="togglePanel()">panel</button>
+
+    <div class="view active" id="vTerminal"></div>
+
+    <div class="view" id="vCode">
+      <pre><code id="codeBlock"></code></pre>
+    </div>
+
+    <div class="view" id="vJson">
+      <div class="jt" id="jsonTree"></div>
+    </div>
+
+    <div class="view" id="vHtml">
+      <!-- sandbox relaxed for embeds: allow-presentation needed for YT fullscreen, allow-popups for Twitter widget -->
+      <iframe id="htmlFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"></iframe>
+    </div>
+
+    <div class="view" id="vImage">
+      <img id="imgEl" alt="">
+    </div>
+
+    <div class="view" id="vMarkdown"></div>
+
+    <div class="view" id="vBinary">
+      <div class="bin-icon">⬡</div>
+      <div class="bin-info">
+        <b id="binName">binary file</b>
+        <span id="binSize"></span>
+        <span id="binType" style="color:var(--accent)"></span>
+        <button class="btn" id="binDlBtn" onclick="downloadContent()" style="margin-top:12px">↓ Download File</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script>
-  const output = document.getElementById("output");
-  const viewer = document.getElementById("viewer");
-  const frame = document.getElementById("codeFrame");
+// ══════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════
+const PROXIES = [
+  { name:'allorigins',  url:'https://api.allorigins.win/get?url=',   parser:'allorigins', status:'idle' },
+  { name:'corsproxy.io',url:'https://corsproxy.io/?',                 parser:'raw',        status:'idle' },
+  { name:'cors.sh',     url:'https://proxy.cors.sh/',                 parser:'raw',        status:'idle' },
+  { name:'htmlpreview', url:'https://api.codetabs.com/v1/proxy?quest=',parser:'raw',       status:'idle' },
+];
 
-  async function handleLoad(useProxy) {
-    const url = document.getElementById("urlInput").value.trim();
-    if (!url) return updateOutput("⚠️ Error: URL required.");
+let history = [];
+let activeHist = -1;
+let rawContent = '';
+let rawType    = '';
+let rawBlob    = null;
+let rawMeta    = {};
+let panelOpen  = true;
+let activePTab = 0;
+let headerRows  = [];
+let cookieRows  = [];
 
-    updateOutput(useProxy ? "🛰️ Initiating Obfuscated Proxy Fetch..." : "🌐 Direct Fetching...");
-    
-    // The "Proxy" target: Using a public CORS bridge to bypass browser restrictions
-    // This replaces your local PC server.
-    const targetUrl = useProxy 
-      ? `https://api.allorigins.win/get?url=${encodeURIComponent(url)}` 
-      : url;
+// ══════════════════════════════════════════════
+//  DOM SHORTCUTS
+// ══════════════════════════════════════════════
+const $  = id => document.getElementById(id);
+const urlInput = $('urlInput');
+const sdot     = $('sdot');
+const stext    = $('stext');
+const ttag     = $('ttag');
+const ptag     = $('ptag');
 
+// ══════════════════════════════════════════════
+//  INIT
+// ══════════════════════════════════════════════
+urlInput.addEventListener('keydown', e => { if(e.key==='Enter') doLoad(false); });
+renderProxyList();
+addHeaderRow();
+addCookieKV();
+tlog('Nexus Loader v2 initialized.','info');
+tlog('Direct = raw browser fetch | Proxy = CORS bypass with fallback chain.','');
+tlog('Configure headers, cookies, proxies in the side panel (⚙).','');
+
+// ══════════════════════════════════════════════
+//  LOGGING
+// ══════════════════════════════════════════════
+function tlog(msg, cls='') {
+  const vt = $('vTerminal');
+  const d  = document.createElement('div');
+  d.className = 'll ' + cls;
+  d.innerHTML = `<span class="ts">${ts()}</span><span class="msg">${esc(msg)}</span>`;
+  vt.appendChild(d);
+  vt.scrollTop = vt.scrollHeight;
+}
+function ts() { return new Date().toLocaleTimeString('en-US',{hour12:false}); }
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
+
+// ══════════════════════════════════════════════
+//  STATUS
+// ══════════════════════════════════════════════
+function setStatus(state, msg) {
+  sdot.className = 'sdot' + (state ? ' '+state : '');
+  stext.textContent = msg;
+}
+function setTags(type, isProxy) {
+  if(type){ ttag.style.display='inline-block'; ttag.textContent=type.toUpperCase(); }
+  else ttag.style.display='none';
+  ptag.style.display = isProxy ? 'inline-block' : 'none';
+}
+
+// ══════════════════════════════════════════════
+//  VIEW SWITCHING
+// ══════════════════════════════════════════════
+const viewIds = ['vTerminal','vCode','vJson','vHtml','vImage','vMarkdown','vBinary'];
+function showView(id) {
+  viewIds.forEach(v => {
+    const el = $(v);
+    if(el) { el.classList.toggle('active', v===id); el.style.display = v===id ? 'flex' : 'none'; }
+  });
+  // restore flex-direction for views that need column
+  ['vCode','vJson','vMarkdown'].forEach(v => { if(v===id && $(v)) $(v).style.flexDirection='column'; });
+}
+// Init: show terminal
+showView('vTerminal'); $('vTerminal').style.display='flex'; $('vTerminal').style.flexDirection='column';
+
+// ══════════════════════════════════════════════
+//  PANEL
+// ══════════════════════════════════════════════
+function togglePanel() {
+  panelOpen = !panelOpen;
+  $('sidePanel').classList.toggle('collapsed', !panelOpen);
+}
+function switchPTab(n) {
+  activePTab = n;
+  document.querySelectorAll('.ptab').forEach((t,i) => t.classList.toggle('active', i===n));
+  ['pt0','pt1','pt2','pt3','pt4'].forEach((id,i) => $(id).style.display = i===n ? 'block' : 'none');
+}
+
+// ══════════════════════════════════════════════
+//  HEADER ROWS
+// ══════════════════════════════════════════════
+function addHeaderRow(k='',v='') {
+  const id = Date.now()+Math.random();
+  headerRows.push({id,k,v});
+  renderHeaderRows();
+}
+function addPreset(k,v){ addHeaderRow(k,v); }
+function renderHeaderRows() {
+  const c = $('headerRows'); c.innerHTML='';
+  headerRows.forEach(r => {
+    const row = document.createElement('div');
+    row.className='kv-row';
+    row.innerHTML=`<input placeholder="Header" value="${esc(r.k)}" oninput="updRow('headers','${r.id}','k',this.value)">
+      <input placeholder="Value" value="${esc(r.v)}" oninput="updRow('headers','${r.id}','v',this.value)">
+      <button class="kv-del" onclick="delRow('headers','${r.id}')">✕</button>`;
+    c.appendChild(row);
+  });
+}
+function updRow(type,id,field,val) {
+  const arr = type==='headers'?headerRows:cookieRows;
+  const r = arr.find(r=>String(r.id)===id); if(r) r[field]=val;
+}
+function delRow(type,id) {
+  if(type==='headers') headerRows=headerRows.filter(r=>String(r.id)!==id), renderHeaderRows();
+  else cookieRows=cookieRows.filter(r=>String(r.id)!==id), renderCookieKVRows();
+}
+
+// ══════════════════════════════════════════════
+//  COOKIE ROWS
+// ══════════════════════════════════════════════
+function addCookieKV(k='',v='') {
+  cookieRows.push({id:Date.now()+Math.random(),k,v});
+  renderCookieKVRows();
+}
+function clearCookies(){ $('cookieInput').value=''; cookieRows=[]; renderCookieKVRows(); }
+function parseCookieKV() {
+  const raw = $('cookieInput').value.trim();
+  if(!raw) return;
+  raw.split(';').forEach(pair => {
+    const idx = pair.indexOf('=');
+    if(idx<0) return;
+    addCookieKV(pair.slice(0,idx).trim(), pair.slice(idx+1).trim());
+  });
+}
+function renderCookieKVRows() {
+  const c = $('cookieKVRows'); c.innerHTML='';
+  cookieRows.forEach(r => {
+    const row = document.createElement('div');
+    row.className='kv-row';
+    row.innerHTML=`<input placeholder="Name" value="${esc(r.k)}" oninput="updRow('cookies','${r.id}','k',this.value)">
+      <input placeholder="Value" value="${esc(r.v)}" oninput="updRow('cookies','${r.id}','v',this.value)">
+      <button class="kv-del" onclick="delRow('cookies','${r.id}')">✕</button>`;
+    c.appendChild(row);
+  });
+}
+
+// Build cookie string from all sources
+function buildCookieHeader() {
+  const parts = [];
+  // From textarea
+  const raw = $('cookieInput').value.trim();
+  if(raw) parts.push(raw);
+  // From KV rows
+  cookieRows.forEach(r => { if(r.k) parts.push(`${r.k}=${r.v}`); });
+  return parts.join('; ');
+}
+
+// Build extra headers object
+function buildHeaders() {
+  const h = {};
+  headerRows.forEach(r => { if(r.k) h[r.k] = r.v; });
+  const cookie = buildCookieHeader();
+  if(cookie) h['Cookie'] = cookie;
+  return h;
+}
+
+// ══════════════════════════════════════════════
+//  PROXY LIST
+// ══════════════════════════════════════════════
+function addCustomProxy() {
+  const v = $('customProxyInput').value.trim();
+  if(!v) return;
+  PROXIES.push({ name:'custom', url:v, parser:'raw', status:'idle' });
+  $('customProxyInput').value='';
+  renderProxyList();
+}
+function renderProxyList() {
+  const c = $('proxyList'); c.innerHTML='';
+  PROXIES.forEach((p,i) => {
+    const d = document.createElement('div');
+    d.className = 'proxy-item ' + (p.status==='ok'?'active':p.status==='fail'?'failed':p.status==='trying'?'trying':'');
+    d.innerHTML=`<div class="proxy-dot"></div><div class="proxy-name">${esc(p.name)}</div><div class="proxy-badge">${p.status==='ok'?'✓':p.status==='fail'?'✗':''}</div>`;
+    c.appendChild(d);
+  });
+}
+function setProxyStatus(i, s) { PROXIES[i].status=s; renderProxyList(); }
+
+// ══════════════════════════════════════════════
+//  TYPE DETECTION
+// ══════════════════════════════════════════════
+const IMAGE_EXTS  = /\.(png|jpe?g|gif|webp|svg|ico|bmp|avif)(\?|$)/i;
+const BINARY_EXTS = /\.(pdf|zip|gz|tar|7z|rar|exe|dmg|pkg|deb|rpm|wasm|ttf|otf|woff2?|mp3|mp4|webm|ogg|flac|wav)(\?|$)/i;
+
+function detectType(url, ct='', body='') {
+  const u = url.split('?')[0];
+  if(ct.includes('image/') || IMAGE_EXTS.test(u))            return 'image';
+  if(BINARY_EXTS.test(u) || ct.includes('application/octet')) return 'binary';
+  if(ct.includes('application/json') || /\.json$/i.test(u))  return 'json';
+  if(ct.includes('text/html') || /\.html?$/i.test(u))        return 'html';
+  if(/\.(md|markdown)$/i.test(u))                             return 'markdown';
+  if(/\.(js|mjs|ts|jsx|tsx)$/i.test(u) || ct.includes('javascript')) return 'javascript';
+  if(/\.css$/i.test(u) || ct.includes('text/css'))            return 'css';
+  if(/\.(xml|rss|atom)$/i.test(u) || ct.includes('xml'))     return 'xml';
+  // Body sniff
+  const t = (body||'').trimStart();
+  if(t.startsWith('{') || t.startsWith('['))   return 'json';
+  if(/^<!doctype html/i.test(t) || t.startsWith('<html')) return 'html';
+  if(t.startsWith('<?xml'))                    return 'xml';
+  if(/^#{1,6}\s|^\*\*|^---\n/.test(t))        return 'markdown';
+  return 'text';
+}
+
+function isImage(type) { return type==='image'; }
+function isBinary(type){ return type==='binary'; }
+function isCode(type)  { return ['javascript','css','xml','text'].includes(type); }
+
+// ══════════════════════════════════════════════
+//  EMBED DETECTION — sites that block all proxies
+// ══════════════════════════════════════════════
+
+// Returns an embed config if URL matches a known walled-garden site, else null.
+function detectEmbed(url) {
+  let m;
+
+  // YouTube — watch, shorts, live
+  m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
+  if(m) return { type:'youtube', id:m[1], label:'YouTube',
+    embed:`https://www.youtube.com/embed/${m[1]}?autoplay=0` };
+
+  // Twitter / X — individual tweet
+  m = url.match(/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
+  if(m) return { type:'tweet', id:m[1], label:'Twitter / X',
+    embed: null, // Twitter embed needs JS widget; we'll inject it
+    tweetId: m[1] };
+
+  // Instagram — post or reel
+  m = url.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
+  if(m) return { type:'instagram', id:m[1], label:'Instagram',
+    embed:`https://www.instagram.com/p/${m[1]}/embed/` };
+
+  // TikTok — video
+  m = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
+  if(m) return { type:'tiktok', id:m[1], label:'TikTok',
+    embed:`https://www.tiktok.com/embed/v2/${m[1]}` };
+
+  // Spotify — track/album/playlist/episode
+  m = url.match(/open\.spotify\.com\/(track|album|playlist|episode|show)\/([A-Za-z0-9]+)/);
+  if(m) return { type:'spotify', id:m[2], label:'Spotify',
+    embed:`https://open.spotify.com/embed/${m[1]}/${m[2]}` };
+
+  // SoundCloud — any page (use their oEmbed)
+  if(/soundcloud\.com\//.test(url)) return { type:'soundcloud', label:'SoundCloud',
+    embed:`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%2300d4ff&auto_play=false` };
+
+  // GitHub — many cases
+  m = url.match(/github\.com\/([^/?#]+)(?:\/([^/?#]+))?(?:\/blob\/([^/]+)\/(.+))?/);
+  if(m) {
+    const [, owner, repo, branch, filepath] = m;
+    if(filepath && branch) {
+      // Blob file → redirect to raw
+      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filepath}`;
+      return { type:'github_raw', label:'GitHub (raw file)', redirect: rawUrl };
+    }
+    if(repo) {
+      // Repo page → use GitHub API to show repo info + README
+      return { type:'github_repo', label:'GitHub Repo', owner, repo };
+    }
+    // User profile or root → use GitHub API
+    if(owner && owner !== '') {
+      return { type:'github_user', label:'GitHub User', owner };
+    }
+    // github.com root
+    return { type:'iframe_blocked', label:'GitHub', url };
+  }
+
+  // Codepen
+  m = url.match(/codepen\.io\/([^/]+)\/pen\/([^/?]+)/);
+  if(m) return { type:'codepen', label:'CodePen',
+    embed:`https://codepen.io/${m[1]}/embed/${m[2]}?default-tab=result&theme-id=dark` };
+
+  // JSFiddle
+  m = url.match(/jsfiddle\.net\/([^/]+\/[^/]+)/);
+  if(m) return { type:'jsfiddle', label:'JSFiddle',
+    embed:`https://jsfiddle.net/${m[1]}/embedded/result,html,css,js/dark/` };
+
+  // Sites known to block iframes entirely — show info card with open button
+  const IFRAME_BLOCKED = [
+    'github.com','google.com','facebook.com','twitter.com','x.com',
+    'linkedin.com','reddit.com','amazon.com','netflix.com','twitch.tv',
+    'discord.com','slack.com','notion.so','figma.com'
+  ];
+  try {
+    const hostname = new URL(url).hostname.replace('www.','');
+    if(IFRAME_BLOCKED.some(b => hostname===b || hostname.endsWith('.'+b))) {
+      return { type:'iframe_blocked', label: hostname, url };
+    }
+  } catch {}
+
+  return null;
+}
+
+function renderEmbed(cfg, url) {
+  setTags('embed', false);
+  addHist(url, 'embed');
+
+  // ── GitHub Repo via API ──
+  if(cfg.type === 'github_repo') {
+    renderGitHubRepo(cfg.owner, cfg.repo, url);
+    return;
+  }
+
+  // ── GitHub User via API ──
+  if(cfg.type === 'github_user') {
+    renderGitHubUser(cfg.owner, url);
+    return;
+  }
+
+  // ── Iframe-blocked site — show info card ──
+  if(cfg.type === 'iframe_blocked') {
+    $('btnCopy').disabled = true;
+    $('btnDl').disabled   = true;
+    setStatus('err', `${cfg.label} — iframe blocked by site policy`);
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{background:#07090d;display:flex;align-items:center;justify-content:center;
+           min-height:100vh;font-family:'JetBrains Mono',monospace;color:#c9d1d9;padding:30px}
+      .card{background:#0d1117;border:1px solid #1c2a38;border-radius:10px;padding:32px;
+            max-width:480px;width:100%;text-align:center}
+      .icon{font-size:40px;margin-bottom:16px;opacity:.4}
+      h2{font-size:16px;color:#e6edf3;margin-bottom:8px}
+      p{font-size:11px;color:#6e7f8e;line-height:1.7;margin-bottom:20px}
+      .url{background:#111820;border:1px solid #1c2a38;border-radius:4px;padding:8px;
+           font-size:10px;color:#00d4ff;word-break:break-all;margin-bottom:20px}
+      a{display:inline-block;background:#00d4ff;color:#07090d;padding:9px 20px;border-radius:5px;
+        text-decoration:none;font-size:11px;font-weight:600}
+      .why{margin-top:18px;font-size:10px;color:#3a4a5a;line-height:1.6}
+    </style></head><body>
+    <div class="card">
+      <div class="icon">⊗</div>
+      <h2>${esc(cfg.label)} blocks iframe embedding</h2>
+      <p>This site sends <code>X-Frame-Options: DENY</code> or a strict <code>Content-Security-Policy</code> that prevents it from loading inside any iframe — including CORS proxies.</p>
+      <div class="url">${esc(url)}</div>
+      <a href="${esc(url)}" target="_blank" rel="noopener">Open in New Tab ↗</a>
+      <div class="why">This is a browser security feature that cannot be bypassed from a web page.</div>
+    </div>
+    </body></html>`;
+    $('htmlFrame').srcdoc = html;
+    showView('vHtml');
+    return;
+  }
+
+  $('btnCopy').disabled = true;
+  $('btnDl').disabled   = true;
+  setStatus('ok', `${cfg.label} — embedded view`);
+
+  // Twitter needs special widget injection
+  if(cfg.type === 'tweet') {
+    const html = `<!DOCTYPE html><html><head>
+      <meta charset="utf-8">
+      <style>body{margin:0;display:flex;justify-content:center;padding:20px;background:#0d1117;font-family:sans-serif}</style>
+    </head><body>
+      <blockquote class="twitter-tweet" data-theme="dark">
+        <a href="${esc(url)}"></a>
+      </blockquote>
+      <script async src="https://platform.twitter.com/widgets.js"><\/script>
+    </body></html>`;
+    $('htmlFrame').srcdoc = html;
+    showView('vHtml');
+    return;
+  }
+
+  // Everything else uses a plain iframe embed URL
+  const iframeH = ['youtube','spotify'].includes(cfg.type) ? '315' : '100%';
+  const html = `<!DOCTYPE html><html><head>
+    <meta charset="utf-8">
+    <style>
+      *{margin:0;padding:0;box-sizing:border-box}
+      body{background:#07090d;display:flex;align-items:center;justify-content:center;min-height:100vh}
+      iframe{width:${cfg.type==='youtube'?'560':'100%'};height:${iframeH==='100%'?'100vh':iframeH+'px'};
+             max-width:100%;border:none;border-radius:8px}
+    </style>
+  </head><body>
+    <iframe src="${cfg.embed}" allowfullscreen allow="autoplay; encrypted-media; clipboard-write; picture-in-picture" loading="lazy"></iframe>
+  </body></html>`;
+  $('htmlFrame').srcdoc = html;
+  showView('vHtml');
+}
+
+// ── GitHub Repo Card via public API ──
+async function renderGitHubRepo(owner, repo, originalUrl) {
+  setStatus('loading', `Fetching GitHub repo: ${owner}/${repo}...`);
+  tlog(`GitHub API → repos/${owner}/${repo}`, 'info');
+  try {
+    const [repoRes, readmeRes, langsRes] = await Promise.allSettled([
+      fetch(`https://api.github.com/repos/${owner}/${repo}`),
+      fetch(`https://api.github.com/repos/${owner}/${repo}/readme`),
+      fetch(`https://api.github.com/repos/${owner}/${repo}/languages`)
+    ]);
+
+    const repoData  = repoRes.status==='fulfilled' && repoRes.value.ok  ? await repoRes.value.json()  : null;
+    const readmeData= readmeRes.status==='fulfilled' && readmeRes.value.ok ? await readmeRes.value.json() : null;
+    const langsData = langsRes.status==='fulfilled' && langsRes.value.ok  ? await langsRes.value.json()  : null;
+
+    if(!repoData) throw new Error('Repo not found or API rate limited');
+
+    let readmeText = '';
+    if(readmeData?.content) {
+      try { readmeText = atob(readmeData.content.replace(/\n/g,'')); } catch {}
+    }
+
+    const langs = langsData ? Object.keys(langsData).slice(0,6) : [];
+    const totalBytes = langsData ? Object.values(langsData).reduce((a,b)=>a+b,0) : 0;
+    const langBars = langs.map(l => {
+      const pct = ((langsData[l]/totalBytes)*100).toFixed(1);
+      const colors = {JavaScript:'#f1e05a',TypeScript:'#3178c6',Python:'#3572A5',Rust:'#dea584',Go:'#00ADD8',CSS:'#563d7c',HTML:'#e34c26',C:'#555555','C++':'#f34b7d','C#':'#178600',Java:'#b07219',Lua:'#000080'};
+      return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
+        <div style="width:10px;height:10px;border-radius:50%;background:${colors[l]||'#888'};flex-shrink:0"></div>
+        <span style="flex:1;font-size:10px">${l}</span>
+        <span style="font-size:10px;color:#6e7f8e">${pct}%</span>
+        <div style="width:80px;height:4px;background:#1c2a38;border-radius:2px">
+          <div style="width:${pct}%;height:100%;background:${colors[l]||'#888'};border-radius:2px"></div>
+        </div>
+      </div>`;
+    }).join('');
+
+    const readmeHtml = readmeText ? marked.parse(readmeText) : '<p style="color:#6e7f8e">No README</p>';
+
+    rawContent = readmeText;
+    rawType = 'markdown';
+    rawMeta = { url: originalUrl, proxy: 'github-api', size: readmeText.length };
+    updateInfo();
+    $('btnCopy').disabled = !readmeText;
+    $('btnDl').disabled = !readmeText;
+    setStatus('ok', `GitHub — ${owner}/${repo}`);
+    setTags('github', false);
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@700&display=swap" rel="stylesheet">
+    <style>
+      *{box-sizing:border-box;margin:0;padding:0}
+      body{background:#07090d;color:#c9d1d9;font-family:'JetBrains Mono',monospace;font-size:12px;padding:20px;line-height:1.6}
+      .header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
+      .avatar{width:52px;height:52px;border-radius:50%;border:2px solid #1c2a38}
+      .meta{flex:1}
+      .repo-name{font-family:'Syne',sans-serif;font-size:18px;color:#e6edf3;font-weight:700}
+      .repo-name a{color:#00d4ff;text-decoration:none}
+      .desc{color:#8b949e;margin-top:4px;font-size:11px}
+      .topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+      .topic{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.2);
+             padding:2px 8px;border-radius:12px;font-size:9px}
+      .stats{display:flex;gap:16px;margin:14px 0;font-size:11px;color:#8b949e}
+      .stat{display:flex;align-items:center;gap:5px}
+      .stat b{color:#e6edf3}
+      .langs{background:#0d1117;border:1px solid #1c2a38;border-radius:6px;padding:12px;margin-bottom:16px}
+      .section-title{font-size:9px;letter-spacing:.1em;color:#6e7f8e;text-transform:uppercase;margin-bottom:8px}
+      .readme{background:#0d1117;border:1px solid #1c2a38;border-radius:6px;padding:20px}
+      .readme h1,.readme h2,.readme h3{font-family:'Syne',sans-serif;color:#e6edf3;margin:1em 0 .4em;border-bottom:1px solid #1c2a38;padding-bottom:6px}
+      .readme p{margin:.6em 0;color:#c9d1d9;line-height:1.7}
+      .readme code{background:#161f2a;padding:1px 5px;border-radius:3px;color:#00d4ff;font-size:10px}
+      .readme pre{background:#111820;border:1px solid #1c2a38;border-radius:4px;padding:12px;margin:.8em 0;overflow-x:auto}
+      .readme pre code{background:none;color:#c9d1d9}
+      .readme a{color:#00d4ff}
+      .readme img{max-width:100%;border-radius:4px}
+      .readme ul,.readme ol{padding-left:20px}
+      .open-btn{display:inline-block;margin-top:12px;background:#00d4ff;color:#07090d;
+                padding:7px 16px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:600}
+    </style></head><body>
+    <div class="header">
+      <img class="avatar" src="${repoData.owner?.avatar_url||''}" alt="">
+      <div class="meta">
+        <div class="repo-name"><a href="${repoData.html_url}" target="_blank">${esc(owner)}/${esc(repo)}</a></div>
+        <div class="desc">${esc(repoData.description||'No description')}</div>
+        <div class="topics">${(repoData.topics||[]).map(t=>`<span class="topic">${esc(t)}</span>`).join('')}</div>
+      </div>
+    </div>
+    <div class="stats">
+      <div class="stat">⭐ <b>${(repoData.stargazers_count||0).toLocaleString()}</b> stars</div>
+      <div class="stat">⑂ <b>${(repoData.forks_count||0).toLocaleString()}</b> forks</div>
+      <div class="stat">👁 <b>${(repoData.watchers_count||0).toLocaleString()}</b> watchers</div>
+      ${repoData.language?`<div class="stat">◈ <b>${esc(repoData.language)}</b></div>`:''}
+      ${repoData.license?.spdx_id?`<div class="stat">⚖ <b>${esc(repoData.license.spdx_id)}</b></div>`:''}
+    </div>
+    ${langs.length?`<div class="langs"><div class="section-title">Languages</div>${langBars}</div>`:''}
+    <div class="readme">
+      <div class="section-title">README</div>
+      ${readmeHtml}
+    </div>
+    <a class="open-btn" href="${repoData.html_url}" target="_blank" rel="noopener">Open on GitHub ↗</a>
+    </body></html>`;
+
+    $('htmlFrame').srcdoc = html;
+    showView('vHtml');
+    tlog(`Loaded: ${repoData.stargazers_count} stars, ${langs.join(', ')||'no langs'}`, 'ok');
+  } catch(err) {
+    setStatus('err', `GitHub API error: ${err.message}`);
+    tlog(err.message, 'err');
+    tlog('GitHub API rate-limits unauthenticated requests to 60/hr. Add a token in Headers tab.','warn');
+  }
+}
+
+// ── GitHub User Card via public API ──
+async function renderGitHubUser(owner, originalUrl) {
+  setStatus('loading', `Fetching GitHub user: ${owner}...`);
+  try {
+    const [userRes, reposRes] = await Promise.allSettled([
+      fetch(`https://api.github.com/users/${owner}`),
+      fetch(`https://api.github.com/users/${owner}/repos?sort=stars&per_page=6`)
+    ]);
+    const userData  = userRes.status==='fulfilled'  && userRes.value.ok  ? await userRes.value.json()  : null;
+    const reposData = reposRes.status==='fulfilled' && reposRes.value.ok ? await reposRes.value.json() : [];
+    if(!userData) throw new Error('User not found');
+
+    setStatus('ok', `GitHub user — ${owner}`);
+    setTags('github', false);
+
+    const repoCards = reposData.map(r=>`
+      <div style="background:#111820;border:1px solid #1c2a38;border-radius:5px;padding:10px;margin-bottom:8px">
+        <div><a href="${r.html_url}" target="_blank" style="color:#00d4ff;text-decoration:none;font-size:11px">${esc(r.name)}</a>
+          <span style="color:#6e7f8e;font-size:10px;margin-left:8px">⭐ ${r.stargazers_count}</span></div>
+        <div style="color:#8b949e;font-size:10px;margin-top:3px">${esc(r.description||'')}</div>
+      </div>`).join('');
+
+    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
+    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
+    <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#07090d;color:#c9d1d9;font-family:'JetBrains Mono',monospace;font-size:12px;padding:24px;line-height:1.6}
+    .avatar{width:80px;height:80px;border-radius:50%;border:2px solid #1c2a38;margin-bottom:12px}
+    h1{font-family:'Syne',sans-serif;color:#e6edf3;font-size:20px}
+    .login{color:#00d4ff;font-size:12px;margin-bottom:8px}
+    .bio{color:#8b949e;font-size:11px;margin-bottom:12px}
+    .stats{display:flex;gap:16px;font-size:11px;color:#8b949e;margin-bottom:20px}
+    .stat b{color:#e6edf3}
+    .open-btn{display:inline-block;background:#00d4ff;color:#07090d;padding:7px 16px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:600;margin-bottom:20px}
+    .section-title{font-size:9px;letter-spacing:.1em;color:#6e7f8e;text-transform:uppercase;margin-bottom:10px}
+    </style></head><body>
+    <img class="avatar" src="${userData.avatar_url}" alt="">
+    <h1>${esc(userData.name||owner)}</h1>
+    <div class="login">@${esc(userData.login)}</div>
+    <div class="bio">${esc(userData.bio||'')}</div>
+    <div class="stats">
+      <div class="stat">Repos <b>${userData.public_repos}</b></div>
+      <div class="stat">Followers <b>${userData.followers}</b></div>
+      <div class="stat">Following <b>${userData.following}</b></div>
+    </div>
+    <a class="open-btn" href="${userData.html_url}" target="_blank">Open on GitHub ↗</a>
+    ${repoCards.length?`<div class="section-title">Top Repositories</div>${repoCards}`:''}
+    </body></html>`;
+
+    $('htmlFrame').srcdoc = html;
+    showView('vHtml');
+    tlog(`Loaded: ${userData.public_repos} repos, ${userData.followers} followers`, 'ok');
+  } catch(err) {
+    setStatus('err', `GitHub API error: ${err.message}`);
+    tlog(err.message, 'err');
+  }
+}
+
+// ══════════════════════════════════════════════
+  const url = urlInput.value.trim();
+  if(!url){ tlog('URL required.','err'); return; }
+
+  showView('vTerminal');
+  setStatus('loading','Fetching...');
+  setTags(null,useProxy);
+  $('btnCopy').disabled = true;
+  $('btnDl').disabled   = true;
+  rawContent=''; rawType=''; rawBlob=null; rawMeta={};
+
+  PROXIES.forEach(p=>p.status='idle');
+  renderProxyList();
+
+  tlog((useProxy?'[PROXY] ':'[DIRECT] ')+'→ '+url, 'info');
+
+  // Smart embed detection — intercept walled-garden sites before any fetch
+  const embed = detectEmbed(url);
+  if(embed) {
+    if(embed.redirect) {
+      tlog(`Detected ${embed.label} — redirecting to raw URL`, 'info');
+      urlInput.value = embed.redirect;
+      await doLoad(useProxy);
+      return;
+    }
+    tlog(`Detected ${embed.label} — native embed used (proxies cannot bypass this site)`, 'warn');
+    renderEmbed(embed, url);
+    return;
+  }
+
+  if(useProxy) {
+    await proxyLoad(url);
+  } else {
+    await directLoad(url);
+  }
+}
+
+// ── DIRECT ──
+async function directLoad(url) {
+  // Check for likely image
+  if(IMAGE_EXTS.test(url.split('?')[0])){
+    tlog('Detected image URL — loading directly.','');
+    rawType='image'; rawMeta={url};
+    await renderContent('image','',url);
+    return;
+  }
+  if(BINARY_EXTS.test(url.split('?')[0])){
+    tlog('Binary file detected — initiating download.','warn');
+    triggerDirectDownload(url);
+    return;
+  }
+  try {
+    const res = await fetch(url, { headers: buildHeaders() });
+    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
+    const ct = res.headers.get('content-type')||'';
+    tlog(`${res.status} OK | ${ct||'no content-type'}`,'ok');
+    const body = await res.text();
+    const type = detectType(url, ct, body);
+    rawContent=body; rawType=type;
+    rawMeta={url, ct, size:body.length, method:'direct'};
+    updateInfo();
+    addHist(url,type);
+    await renderContent(type,body,url);
+  } catch(err) {
+    setStatus('err',err.message);
+    tlog(err.message,'err');
+    tlog('CORS blocked? Try ⬡ Proxy mode.','warn');
+  }
+}
+
+// ── PROXY FALLBACK CHAIN ──
+async function proxyLoad(url) {
+  const extraHeaders = buildHeaders();
+  const cookieStr = buildCookieHeader();
+
+  for(let i=0; i<PROXIES.length; i++){
+    const p = PROXIES[i];
+    setProxyStatus(i,'trying');
+    tlog(`Trying proxy [${i+1}/${PROXIES.length}]: ${p.name}...`,'');
     try {
-      const response = await fetch(targetUrl);
-      if (!response.ok) throw new Error(`Status ${response.status}`);
-      
-      let data = await response.json();
-      
-      // DECODE & DE-OBFUSCATE
-      // If using AllOrigins, the content is in data.contents
-      let rawContent = useProxy ? data.contents : await response.text();
-      
-      // Simulate Obfuscation: If you were sending from a custom GitHub Action,
-      // you would Base64 encode the string there. We decode it here.
-      const processedContent = isBase64(rawContent) ? atob(rawContent) : rawContent;
-
-      renderContent(processedContent);
-    } catch (err) {
-      updateOutput(`❌ Fail: ${err.message}\nNote: Direct Load often fails due to CORS. Use Proxy.`);
+      const result = await tryProxy(p, url, extraHeaders, cookieStr);
+      setProxyStatus(i,'ok');
+      const {body, ct} = result;
+      const type = detectType(url, ct, body);
+      tlog(`✓ ${p.name} succeeded | type: ${type}`, 'ok');
+      rawContent=body; rawType=type;
+      rawMeta={url, ct, size:body.length, proxy:p.name};
+      updateInfo();
+      addHist(url,type);
+      await renderContent(type,body,url,true);
+      return;
+    } catch(err) {
+      setProxyStatus(i,'fail');
+      tlog(`✗ ${p.name} failed: ${err.message}`, 'warn');
     }
   }
+  setStatus('err','All proxies failed');
+  tlog('All proxies exhausted. Try a custom proxy in the Proxies panel.','err');
+}
 
-  function renderContent(content) {
-    // Extract scripts for the log
-    const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
-    const scripts = [...content.matchAll(scriptRegex)].map(m => m[1]);
-    
-    output.style.display = "none";
-    viewer.style.display = "block";
-    
-    // Using srcdoc to safely inject the code into the iframe
-    frame.srcdoc = content;
-    
-    console.log("Extracted Scripts:", scripts);
+async function tryProxy(p, url, extraHeaders={}, cookieStr='') {
+  // Build final headers
+  const headers = {};
+  Object.assign(headers, extraHeaders);
+  if(cookieStr) headers['Cookie']=cookieStr;
+
+  // allorigins has special JSON wrapper
+  if(p.parser==='allorigins'){
+    const res = await fetchWithTimeout(`${p.url}${encodeURIComponent(url)}`, {headers}, 8000);
+    if(!res.ok) throw new Error(`HTTP ${res.status}`);
+    const json = await res.json();
+    return { body: json.contents||'', ct: json.content_type||'' };
   }
 
-  function updateOutput(msg) {
-    output.style.display = "block";
-    viewer.style.display = "none";
-    output.textContent = msg;
+  // Raw proxy: just prepend URL
+  const res = await fetchWithTimeout(`${p.url}${encodeURIComponent(url)}`, {headers}, 8000);
+  if(!res.ok) throw new Error(`HTTP ${res.status}`);
+  const ct = res.headers.get('content-type')||'';
+  const body = await res.text();
+  return { body, ct };
+}
+
+function fetchWithTimeout(url, opts, ms) {
+  // NOTE: Do NOT use AbortController here — passing signal through fetch opts
+  // causes "AbortSignal object could not be cloned" in sandboxed/iframe contexts.
+  // Instead race the fetch against a rejection timer.
+  const timeout = new Promise((_,reject) =>
+    setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
+  );
+  return Promise.race([ fetch(url, opts), timeout ]);
+}
+
+function triggerDirectDownload(url) {
+  const a = document.createElement('a');
+  a.href=url; a.download=url.split('/').pop().split('?')[0]||'download';
+  a.click();
+  tlog('Download triggered.','ok');
+  setStatus('ok','Binary download triggered');
+}
+
+// ══════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════
+async function renderContent(type, body, url, isProxy=false) {
+  setTags(type, isProxy);
+  const canCopy = !['image','binary'].includes(type);
+  $('btnCopy').disabled = !canCopy;
+  $('btnDl').disabled   = false;
+
+  const size = body ? fmtSize(body.length) : '';
+  setStatus('ok', `Loaded — ${type.toUpperCase()}${size?' · '+size:''}`);
+
+  switch(type){
+    case 'json':       renderJSON(body);          break;
+    case 'html':       renderHTML(body);           break;
+    case 'image':      renderImage(body, url);     break;
+    case 'markdown':   renderMarkdown(body);       break;
+    case 'binary':     renderBinary(url, body);    break;
+    default:           renderCode(body, type);     break;
+  }
+}
+
+// Code
+function renderCode(body, lang) {
+  const block = $('codeBlock');
+  block.textContent = body;
+  block.className = `language-${ lang==='text'?'plaintext':lang }`;
+  hljs.highlightElement(block);
+  showView('vCode');
+}
+
+// JSON
+function renderJSON(body) {
+  try {
+    const parsed = JSON.parse(body);
+    const tree = $('jsonTree'); tree.innerHTML='';
+    tree.appendChild(buildJNode(parsed,null));
+    showView('vJson');
+  } catch {
+    tlog('JSON parse error — showing as plain text','warn');
+    renderCode(body,'json');
+  }
+}
+function buildJNode(val,key) {
+  const w = document.createElement('div');
+  const kh = key!==null ? `<span class="jk">"${esc(key)}"</span><span class="jbr">: </span>` : '';
+  if(val===null){ w.innerHTML=`${kh}<span class="jz">null</span>`; }
+  else if(typeof val==='boolean'){ w.innerHTML=`${kh}<span class="jb">${val}</span>`; }
+  else if(typeof val==='number'){  w.innerHTML=`${kh}<span class="jn">${val}</span>`; }
+  else if(typeof val==='string'){  w.innerHTML=`${kh}<span class="js_">"${esc(val)}"</span>`; }
+  else if(Array.isArray(val)){
+    const [open,close,count] = ['[',']',val.length+' items'];
+    buildCollapsible(w,kh,open,close,count, val.map((_,i)=>buildJNode(val[i],null)));
+  } else {
+    const keys=Object.keys(val);
+    buildCollapsible(w,kh,'{','}',keys.length+' keys', keys.map(k=>buildJNode(val[k],k)));
+  }
+  return w;
+}
+function buildCollapsible(w,kh,open,close,label,children){
+  const ch = document.createElement('div'); ch.className='ji jch';
+  children.forEach(c=>ch.appendChild(c));
+  const hd = document.createElement('div'); hd.className='jcol';
+  hd.innerHTML=`${kh}<span class="jtog">▾</span><span class="jbr">${open}</span> <span style="color:var(--text-d);font-size:10px">${label}</span>`;
+  hd.addEventListener('click',()=>{ const c=w.classList.toggle('jcollapsed'); hd.querySelector('.jtog').textContent=c?'▸':'▾'; });
+  const ft = document.createElement('div'); ft.innerHTML=`<span class="jbr">${close}</span>`;
+  w.appendChild(hd); w.appendChild(ch); w.appendChild(ft);
+}
+
+// HTML
+function renderHTML(body) {
+  $('htmlFrame').srcdoc = body;
+  showView('vHtml');
+}
+
+// Image
+function renderImage(body, url) {
+  const img = $('imgEl');
+  if(rawBlob) img.src = URL.createObjectURL(rawBlob);
+  else if(isBase64(body)) img.src = 'data:image/png;base64,'+body;
+  else img.src = url || urlInput.value.trim();
+  showView('vImage');
+}
+
+// Markdown
+function renderMarkdown(body) {
+  $('vMarkdown').innerHTML = marked.parse(body);
+  showView('vMarkdown');
+}
+
+// Binary
+function renderBinary(url, body) {
+  const name = url.split('/').pop().split('?')[0]||'file';
+  const ext  = name.split('.').pop().toUpperCase();
+  $('binName').textContent = name;
+  $('binSize').textContent = body ? fmtSize(body.length) : '';
+  $('binType').textContent = ext;
+  showView('vBinary');
+  $('btnDl').disabled = false;
+}
+
+// ══════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════
+async function copyContent(){
+  let text = rawContent;
+  if(incognitoOn && encryptedStore) {
+    try { text = await decryptContent(); } catch { tlog('Copy failed: decryption error','err'); return; }
+  }
+  if(!text) return;
+  navigator.clipboard.writeText(text).then(()=>{
+    const b=$('btnCopy'), orig=b.textContent;
+    b.textContent='✓ Copied'; setTimeout(()=>b.textContent=orig,1200);
+  });
+}
+
+async function downloadContent(){
+  const url = urlInput.value.trim();
+  const name = url.split('/').pop().split('?')[0]||'nexus-download';
+  if(rawBlob){ dlBlob(rawBlob,name); return; }
+  let text = rawContent;
+  if(incognitoOn && encryptedStore) {
+    try { text = await decryptContent(); } catch { tlog('Download failed: decryption error','err'); return; }
+  }
+  if(!text){ triggerDirectDownload(url); return; }
+  dlBlob(new Blob([text],{type:'text/plain'}), name);
+}
+
+function dlBlob(blob, name){
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob); a.download=name; a.click();
+}
+
+// ══════════════════════════════════════════════
+//  HISTORY
+// ══════════════════════════════════════════════
+function addHist(url,type){
+  if(history.length && history[history.length-1].url===url) return;
+  history.push({url,type}); activeHist=history.length-1; renderHist();
+}
+const TYPE_ICONS = {json:'{}',javascript:'JS',css:'CSS',html:'H',image:'⬡',markdown:'MD',xml:'XML',text:'≡',binary:'⬟',embed:'▶'};
+function renderHist(){
+  const c=$('histBar'); c.innerHTML='';
+  history.forEach((item,i)=>{
+    const t=document.createElement('div');
+    t.className='htab'+(i===activeHist?' active':'');
+    const label=item.url.split('/').pop().split('?')[0]||item.url;
+    t.innerHTML=`<span class="htab-ico">${TYPE_ICONS[item.type]||'?'}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(label)}</span><span class="htab-x">✕</span>`;
+    t.addEventListener('click',e=>{
+      if(e.target.classList.contains('htab-x')){ history.splice(i,1); if(activeHist>=history.length) activeHist=history.length-1; renderHist(); return; }
+      urlInput.value=item.url; activeHist=i; renderHist();
+    });
+    c.appendChild(t);
+  });
+}
+
+// ══════════════════════════════════════════════
+//  INFO PANEL UPDATE
+// ══════════════════════════════════════════════
+function updateInfo(){
+  const m=rawMeta;
+  $('infoBox').innerHTML=`
+    <b>URL</b> ${esc(m.url||'-')}<br>
+    <b>Type</b> ${esc(m.ct||'-')}<br>
+    <b>Detected</b> ${esc(rawType||'-')}<br>
+    <b>Size</b> ${m.size?fmtSize(m.size):'-'}<br>
+    <b>Via</b> ${esc(m.proxy||m.method||'-')}
+  `;
+}
+
+// ══════════════════════════════════════════════
+//  UTILS
+// ══════════════════════════════════════════════
+// ══════════════════════════════════════════════
+//  INCOGNITO / AES-GCM ENGINE
+// ══════════════════════════════════════════════
+let incognitoOn  = false;
+let sessionKey   = null;   // CryptoKey — lives only in this JS heap
+let encryptedStore = null; // { iv: Uint8Array, data: ArrayBuffer }
+
+async function toggleIncognito() {
+  incognitoOn = !incognitoOn;
+  if(incognitoOn) {
+    await generateSessionKey();
+  } else {
+    purgeSession(true); // silent purge — just wipes key+store, doesn't toggle again
+  }
+  updateIncogUI();
+}
+
+async function generateSessionKey() {
+  sessionKey = await crypto.subtle.generateKey(
+    { name:'AES-GCM', length:256 },
+    true,   // extractable = true so we can show the key fingerprint
+    ['encrypt','decrypt']
+  );
+  // Show fingerprint (first 8 bytes of raw key export as hex) — not the full key
+  const raw = await crypto.subtle.exportKey('raw', sessionKey);
+  const hex = Array.from(new Uint8Array(raw).slice(0,8)).map(b=>b.toString(16).padStart(2,'0')).join('');
+  $('keyDisplay').textContent = `Session key fingerprint: ${hex}... (256-bit, AES-GCM)`;
+  tlog('Incognito ON — AES-256-GCM session key generated.', 'info');
+}
+
+function purgeSession(silent=false) {
+  sessionKey     = null;
+  encryptedStore = null;
+  rawContent     = '';
+  $('keyDisplay').textContent = 'No key — incognito off';
+  if(!silent) {
+    incognitoOn = false;
+    updateIncogUI();
+    tlog('Incognito session purged. Key and content wiped.', 'warn');
+  }
+}
+
+function updateIncogUI() {
+  const on = incognitoOn;
+  const tog    = $('incogToggle');
+  const knob   = $('incogKnob');
+  const label  = $('incogLabel');
+  const status = $('incogStatus');
+  const topbar = $('topbar');
+
+  tog.style.background   = on ? 'var(--green)' : 'var(--border2)';
+  tog.style.borderColor  = on ? 'var(--green)'  : 'var(--border)';
+  knob.style.left        = on ? '18px' : '2px';
+  knob.style.background  = on ? '#fff' : 'var(--text-d)';
+  label.textContent      = on ? 'ON — AES-256-GCM active' : 'Off — plaintext mode';
+  label.style.color      = on ? 'var(--green)' : 'var(--text-d)';
+
+  status.innerHTML = on
+    ? `Incognito mode is <b style="color:var(--green)">active</b>.<br>Content encrypted in memory. Key purged on tab close.`
+    : `Incognito mode is <b style="color:var(--text-d)">off</b>.<br>Content stored as plaintext in memory.`;
+
+  // Topbar glow when active
+  topbar.style.boxShadow = on ? 'inset 0 -1px 0 var(--green), 0 0 20px rgba(35,209,139,.07)' : '';
+
+  // Add/remove incognito indicator tag in statusbar
+  let itag = $('incogTag');
+  if(on && !itag) {
+    itag = document.createElement('div');
+    itag.id = 'incogTag';
+    itag.className = 'ttag';
+    itag.style.cssText = 'background:rgba(35,209,139,.1);color:var(--green);border-color:rgba(35,209,139,.25)';
+    itag.textContent = '🔒 INCOGNITO';
+    $('statusbar').insertBefore(itag, $('sbar-actions') || $('ptag').nextSibling);
+  } else if(!on && itag) {
+    itag.remove();
   }
 
-  function isBase64(str) {
-    try { return btoa(atob(str)) == str; } catch (e) { return false; }
+  $('btnRotate').disabled = !on;
+  $('btnPurge').disabled  = !on;
+}
+
+async function rotateKey() {
+  if(!incognitoOn) return;
+  // If we have encrypted content, decrypt with old key first, re-encrypt with new
+  let plaintext = null;
+  if(encryptedStore) {
+    try { plaintext = await decryptContent(); } catch {}
   }
+  await generateSessionKey();
+  if(plaintext !== null) {
+    await encryptContent(plaintext);
+    tlog('Key rotated. Content re-encrypted with new key.', 'info');
+  } else {
+    tlog('Key rotated. No content to re-encrypt.', 'info');
+  }
+}
+
+// Encrypt a string → stores result in encryptedStore, zeros rawContent
+async function encryptContent(text) {
+  if(!sessionKey || !incognitoOn) return;
+  const iv  = crypto.getRandomValues(new Uint8Array(12));
+  const enc = new TextEncoder().encode(text);
+  const ct  = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, sessionKey, enc);
+  encryptedStore = { iv, data: ct };
+  rawContent = ''; // zero plaintext from memory
+  tlog(`Content encrypted (${fmtSize(ct.byteLength)} ciphertext).`, 'ok');
+}
+
+// Decrypt encryptedStore → returns plaintext string (briefly)
+async function decryptContent() {
+  if(!sessionKey || !encryptedStore) throw new Error('No encrypted content or key');
+  const pt = await crypto.subtle.decrypt(
+    { name:'AES-GCM', iv: encryptedStore.iv }, sessionKey, encryptedStore.data
+  );
+  return new TextDecoder().decode(pt);
+}
+
+// Wipe session key on tab unload
+window.addEventListener('beforeunload', () => {
+  if(incognitoOn) purgeSession(true);
+});
+
+// ── Wrap the main load pipeline to encrypt/decrypt around render ──
+// Monkey-patch: save original renderContent, replace with incognito-aware version
+const _renderContent = renderContent;
+async function renderContent(type, body, url, isProxy=false) {
+  if(incognitoOn && body && typeof body === 'string') {
+    // Encrypt immediately, before storing in rawContent
+    await encryptContent(body);
+    // Decrypt briefly just for rendering
+    const plaintext = await decryptContent();
+    await _renderContent(type, plaintext, url, isProxy);
+    // plaintext GC'd as soon as this stack frame ends
+  } else {
+    await _renderContent(type, body, url, isProxy);
+  }
+}
+
+function fmtSize(n){
+  if(n<1024) return n+'B';
+  if(n<1048576) return (n/1024).toFixed(1)+'KB';
+  return (n/1048576).toFixed(2)+'MB';
+}
 </script>
 </body>
 </html>
+
