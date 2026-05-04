@@ -2,148 +2,92 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Code Loader</title>
+  <title>Nexus Code Loader</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: monospace, sans-serif;
-      background: #111;
-      color: #eee;
-      display: flex;
-      flex-direction: column;
-      height: 100vh;
-      overflow: hidden;
-    }
-    header {
-      background: #222;
-      padding: 10px;
-      flex-shrink: 0;
-      display: flex;
-      gap: 10px;
-    }
-    input, button {
-      padding: 8px;
-      font-size: 14px;
-      border-radius: 5px;
-      border: none;
-    }
-    input {
-      flex-grow: 1;
-    }
-    #output {
-      flex-grow: 1;
-      background: #000;
-      color: #0f0;
-      padding: 10px;
-      font-size: clamp(10px, 3vw, 18px);
-      overflow-y: auto;
-      white-space: pre-wrap;
-    }
-    iframe {
-      border: none;
-      width: 100%;
-      height: 100%;
-    }
-    #viewer {
-      flex-grow: 1;
-      display: none;
-    }
+    :root { --bg: #0a0a0a; --accent: #00ff9d; --text: #e0e0e0; }
+    body { margin: 0; font-family: 'Cascadia Code', monospace; background: var(--bg); color: var(--text); height: 100vh; display: flex; flex-direction: column; }
+    header { background: #1a1a1a; padding: 12px; display: flex; gap: 10px; border-bottom: 1px solid #333; }
+    input { flex: 1; background: #000; border: 1px solid #444; color: var(--accent); padding: 10px; border-radius: 4px; outline: none; }
+    button { background: #333; color: white; border: none; padding: 0 15px; cursor: pointer; border-radius: 4px; transition: 0.2s; }
+    button:hover { background: var(--accent); color: #000; }
+    #output { flex: 1; padding: 15px; overflow-y: auto; white-space: pre-wrap; color: #888; font-size: 13px; }
+    #viewer { flex: 1; display: none; background: white; }
+    iframe { width: 100%; height: 100%; border: none; }
+    .status-tag { color: var(--accent); font-weight: bold; }
   </style>
 </head>
 <body>
-  <header>
-    <input id="urlInput" type="text" placeholder="Enter URL with code">
-    <button onclick="loadCode()">Load</button>
-    <button onclick="proxyFetch()">Proxy</button>
-  </header>
 
-  <div id="output">Enter a URL above and press Load or Proxy</div>
-  <div id="viewer"><iframe id="codeFrame"></iframe></div>
+<header>
+  <input id="urlInput" type="text" placeholder="https://example.com/script.js">
+  <button onclick="handleLoad(false)">Load</button>
+  <button onclick="handleLoad(true)">Proxy (Obfuscated)</button>
+</header>
 
-  <script>
-    // ------------------------
-    // Normal Load (fetch from browser)
-    // ------------------------
-    async function loadCode() {
-      const url = document.getElementById("urlInput").value.trim();
-      const output = document.getElementById("output");
-      const viewer = document.getElementById("viewer");
-      const frame = document.getElementById("codeFrame");
+<div id="output">System ready. Awaiting URL input...</div>
+<div id="viewer"><iframe id="codeFrame"></iframe></div>
 
-      output.style.display = "block";
-      viewer.style.display = "none";
+<script>
+  const output = document.getElementById("output");
+  const viewer = document.getElementById("viewer");
+  const frame = document.getElementById("codeFrame");
 
-      if (!url) {
-        output.textContent = "⚠️ Please enter a URL.";
-        return;
-      }
+  async function handleLoad(useProxy) {
+    const url = document.getElementById("urlInput").value.trim();
+    if (!url) return updateOutput("⚠️ Error: URL required.");
 
-      try {
-        const response = await fetch(url);
-        if (!response.ok) throw new Error(`HTTP ${response.status} ${response.statusText}`);
+    updateOutput(useProxy ? "🛰️ Initiating Obfuscated Proxy Fetch..." : "🌐 Direct Fetching...");
+    
+    // The "Proxy" target: Using a public CORS bridge to bypass browser restrictions
+    // This replaces your local PC server.
+    const targetUrl = useProxy 
+      ? `https://api.allorigins.win/get?url=${encodeURIComponent(url)}` 
+      : url;
 
-        const text = await response.text();
+    try {
+      const response = await fetch(targetUrl);
+      if (!response.ok) throw new Error(`Status ${response.status}`);
+      
+      let data = await response.json();
+      
+      // DECODE & DE-OBFUSCATE
+      // If using AllOrigins, the content is in data.contents
+      let rawContent = useProxy ? data.contents : await response.text();
+      
+      // Simulate Obfuscation: If you were sending from a custom GitHub Action,
+      // you would Base64 encode the string there. We decode it here.
+      const processedContent = isBase64(rawContent) ? atob(rawContent) : rawContent;
 
-        // Try to detect <script> blocks
-        const scripts = [...text.matchAll(/<script[^>]*>([\s\S]*?)<\/script>/gi)].map(m => m[1]);
-        let hiddenCode = scripts.length ? scripts.join("\n\n---SCRIPT---\n\n") : "No <script> tags found.";
-
-        // Preview first 500 chars
-        output.textContent =
-          "✅ Code loaded successfully.\n\n" +
-          "=== Raw Content (first 500 chars) ===\n" +
-          text.substring(0, 500) + "\n...\n\n" +
-          "=== Extracted Scripts ===\n" + hiddenCode;
-
-        // Render fullscreen
-        frame.srcdoc = text;
-        output.style.display = "none";
-        viewer.style.display = "block";
-
-      } catch (err) {
-        output.textContent = "❌ Error loading code:\n" + err.message;
-      }
+      renderContent(processedContent);
+    } catch (err) {
+      updateOutput(`❌ Fail: ${err.message}\nNote: Direct Load often fails due to CORS. Use Proxy.`);
     }
+  }
 
-    // ------------------------
-    // Proxy fetch (via your PC server)
-    // ------------------------
-    async function proxyFetch() {
-      const url = document.getElementById("urlInput").value.trim();
-      const output = document.getElementById("output");
-      const viewer = document.getElementById("viewer");
-      const frame = document.getElementById("codeFrame");
+  function renderContent(content) {
+    // Extract scripts for the log
+    const scriptRegex = /<script[^>]*>([\s\S]*?)<\/script>/gi;
+    const scripts = [...content.matchAll(scriptRegex)].map(m => m[1]);
+    
+    output.style.display = "none";
+    viewer.style.display = "block";
+    
+    // Using srcdoc to safely inject the code into the iframe
+    frame.srcdoc = content;
+    
+    console.log("Extracted Scripts:", scripts);
+  }
 
-      if (!url) {
-        output.textContent = "⚠️ Please enter a URL.";
-        return;
-      }
+  function updateOutput(msg) {
+    output.style.display = "block";
+    viewer.style.display = "none";
+    output.textContent = msg;
+  }
 
-      output.style.display = "block";
-      viewer.style.display = "none";
-      output.textContent = "⏳ Fetching via server proxy...";
-
-      try {
-        const resp = await fetch("http://YOUR_PC_IP:8080/fetch", { // change YOUR_PC_IP
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ url })
-        });
-
-        if (!resp.ok) throw new Error(`HTTP ${resp.status} ${resp.statusText}`);
-        const html = await resp.text();
-
-        frame.srcdoc = html;
-        output.style.display = "none";
-        viewer.style.display = "block";
-      } catch (err) {
-        output.textContent = "❌ Proxy fetch failed:\n" + err.message;
-      }
-    }
-  </script>
+  function isBase64(str) {
+    try { return btoa(atob(str)) == str; } catch (e) { return false; }
+  }
+</script>
 </body>
 </html>
-
-
