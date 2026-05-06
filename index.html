@@ -222,7 +222,45 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 .bin-info{text-align:center;line-height:2}
 .bin-info b{color:var(--text);display:block;font-size:14px;margin-bottom:4px}
 
-/* Toggle panel btn */
+/* ══ FILE CONVERTER VIEW ══ */
+.drop-zone{
+  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+  border:2px dashed var(--border2);border-radius:10px;margin:20px;cursor:pointer;
+  color:var(--text-d);font-size:12px;gap:8px;transition:all .15s;
+}
+.drop-zone:hover,.drop-zone.over{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.03)}
+.dz-icon{font-size:36px;opacity:.3}
+#convBody{padding:16px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.conv-header{display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+.conv-filetype{width:44px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;letter-spacing:.03em}
+.conv-filemeta{flex:1;min-width:0}
+.conv-filename{color:var(--text-b);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-fileinfo{color:var(--text-d);font-size:10px;margin-top:2px}
+.conv-section{background:var(--s1);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.conv-section-title{padding:8px 12px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-d);border-bottom:1px solid var(--border);background:var(--s2);display:flex;align-items:center;gap:6px}
+.conv-section-body{padding:10px 12px}
+.conv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
+.conv-btn{
+  background:var(--s2);border:1px solid var(--border);color:var(--text);
+  padding:7px 8px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono',monospace;
+  font-size:10px;text-align:center;transition:all .13s;
+}
+.conv-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
+.conv-btn .cb-to{font-size:8px;color:var(--text-d);display:block;margin-top:2px}
+.hex-table{font-size:10px;line-height:1.9;word-break:break-all;color:var(--text-d);max-height:200px;overflow-y:auto}
+.hex-row{display:flex;gap:12px}
+.hex-addr{color:#1e4060;flex-shrink:0;width:52px}
+.hex-bytes{flex:1;color:var(--text);letter-spacing:.08em;word-break:break-all}
+.hex-ascii{color:var(--green);letter-spacing:.04em;width:130px;flex-shrink:0}
+.struct-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
+.struct-row:last-child{border:none}
+.struct-key{color:var(--accent);flex:0 0 140px;flex-shrink:0}
+.struct-val{color:var(--text);word-break:break-all}
+.conv-preview{max-height:160px;overflow:auto;border:1px solid var(--border);border-radius:4px;padding:8px;background:var(--bg);font-size:10px;line-height:1.6}
+.conv-preview img{max-width:100%;max-height:140px;object-fit:contain}
+.tag-pill{display:inline-block;background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.15);padding:1px 7px;border-radius:10px;font-size:9px;margin:2px}
+.not-supported{color:var(--text-d);font-size:10px;font-style:italic;padding:4px 0}
+
 #togglePanel{
   position:absolute;left:0;top:50%;transform:translateY(-50%);
   background:var(--s2);border:1px solid var(--border);border-left:none;
@@ -230,6 +268,42 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
   font-size:10px;z-index:10;transition:all .15s;writing-mode:vertical-rl;
 }
 #togglePanel:hover{color:var(--accent);border-color:var(--accent)}
+
+/* ══ CONVERTER VIEW ══ */
+#vConverter{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;flex-direction:column;gap:14px}
+.conv-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--s1);border:1px solid var(--border);border-radius:7px}
+.conv-icon{font-size:28px;flex-shrink:0}
+.conv-title{font-family:'Syne',sans-serif;font-size:15px;color:var(--text-b);font-weight:700}
+.conv-sub{font-size:10px;color:var(--text-d);margin-top:2px}
+.conv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.conv-card{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:12px;cursor:pointer;transition:all .15s}
+.conv-card:hover{border-color:var(--accent);background:rgba(0,212,255,.04)}
+.conv-card.active{border-color:var(--accent);background:rgba(0,212,255,.08)}
+.conv-card-title{font-size:11px;color:var(--text-b);margin-bottom:3px}
+.conv-card-sub{font-size:9px;color:var(--text-d)}
+.conv-actions{display:flex;gap:7px;flex-wrap:wrap}
+.conv-out{background:var(--s1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.conv-out-bar{background:var(--s2);padding:6px 12px;font-size:9px;color:var(--text-d);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
+.conv-out-content{padding:12px;font-size:11px;line-height:1.65;max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.hex-row{display:flex;gap:6px;font-size:10px;line-height:1.8}
+.hex-addr{color:var(--text-d);user-select:none;flex-shrink:0;width:52px}
+.hex-bytes{color:var(--accent);flex:1;letter-spacing:.06em}
+.hex-ascii{color:var(--green);flex-shrink:0;width:130px;letter-spacing:.04em}
+.pe-section{margin-bottom:10px}
+.pe-key{color:var(--text-d);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.pe-val{color:var(--text-b);font-size:11px;margin-top:1px}
+.pe-table{width:100%;border-collapse:collapse;font-size:10px;margin-top:6px}
+.pe-table th{background:var(--s2);color:var(--accent);padding:4px 8px;text-align:left;font-size:9px;letter-spacing:.06em}
+.pe-table td{padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text)}
+.zip-entry{display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border);font-size:10px}
+.zip-entry:last-child{border:none}
+.zip-name{flex:1;color:var(--text-b)}
+.zip-size{color:var(--text-d);flex-shrink:0}
+.zip-ext{background:var(--s3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--accent)}
+.img-preview{max-width:100%;max-height:200px;object-fit:contain;border-radius:4px;display:block;margin:0 auto}
+.drop-zone{border:2px dashed var(--border);border-radius:8px;padding:40px;text-align:center;color:var(--text-d);font-size:11px;transition:all .15s;cursor:pointer}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.03)}
+.drop-zone .dz-icon{font-size:36px;margin-bottom:10px;opacity:.3}
 </style>
 </head>
 <body>
@@ -242,8 +316,10 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
     <div class="btn-group">
       <button class="btn go" onclick="doLoad(false)">▶ Direct</button>
       <button class="btn proxy" onclick="doLoad(true)">⬡ Proxy</button>
+      <button class="btn sm" onclick="$('fileInput').click()" title="Open local file for conversion/analysis" style="border-color:var(--yellow);color:var(--yellow)">⬆ File</button>
       <button class="btn sm" id="btnPanel" onclick="togglePanel()" title="Toggle side panel">⚙</button>
     </div>
+    <input type="file" id="fileInput" style="display:none" onchange="handleFileInput(this)" accept="*/*">
   </div>
   <div id="histBar"></div>
 </div>
@@ -435,1033 +511,482 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
         <button class="btn" id="binDlBtn" onclick="downloadContent()" style="margin-top:12px">↓ Download File</button>
       </div>
     </div>
+
+    <!-- ── FILE CONVERTER VIEW ── -->
+    <div class="view" id="vConverter">
+      <div class="drop-zone" id="dropZone" onclick="$('fileInput').click()" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+        <div class="dz-icon">⬆</div>
+        <div>Drop any file here or click to browse</div>
+        <div style="font-size:9px;margin-top:6px;color:var(--text-d)">Images · Text · JSON · CSV · XML · ZIP · PE/DLL/EXE · XEX · Binary · and more</div>
+      </div>
+      <div id="convBody" style="display:none;flex-direction:column;gap:12px;flex:1"></div>
+    </div>
   </div>
 </div>
 
 <script>
 // ══════════════════════════════════════════════
-//  STATE
+//  NEXUS ENCRYPTED PROXY CLIENT
+//  ECDH key exchange + AES-256-GCM payload encryption
+//  Only the worker and this script can read responses
 // ══════════════════════════════════════════════
-const PROXIES = [
-  { name:'allorigins',  url:'https://api.allorigins.win/get?url=',   parser:'allorigins', status:'idle' },
-  { name:'corsproxy.io',url:'https://corsproxy.io/?',                 parser:'raw',        status:'idle' },
-  { name:'cors.sh',     url:'https://proxy.cors.sh/',                 parser:'raw',        status:'idle' },
-  { name:'htmlpreview', url:'https://api.codetabs.com/v1/proxy?quest=',parser:'raw',       status:'idle' },
-];
 
-let history = [];
-let activeHist = -1;
-let rawContent = '';
-let rawType    = '';
-let rawBlob    = null;
-let rawMeta    = {};
-let panelOpen  = true;
-let activePTab = 0;
-let headerRows  = [];
-let cookieRows  = [];
-
-// ══════════════════════════════════════════════
-//  DOM SHORTCUTS
-// ══════════════════════════════════════════════
-const $  = id => document.getElementById(id);
+// ── State ──
+const viewIds = ['vTerminal','vCode','vJson','vHtml','vImage','vMarkdown','vBinary','vConverter'];
+const $ = id => document.getElementById(id);
 const urlInput = $('urlInput');
 const sdot     = $('sdot');
 const stext    = $('stext');
-const ttag     = $('ttag');
-const ptag     = $('ptag');
+
+let rawBlob    = null;
+let panelOpen  = true;
+let headerRows = [];
+let cookieRows = [];
+
+// ── Crypto state ──
+let clientPrivateKey = null;   // ECDH private key — never leaves this tab
+let clientPublicKeyB64 = null; // exported public key sent to worker
+let sessionAESKey = null;      // AES-GCM key derived after handshake
+
+// ── Worker URL — edit this after deploying the Cloudflare Worker ──
+let WORKER_URL = localStorage.getItem('nexus_worker_url') || '';
 
 // ══════════════════════════════════════════════
 //  INIT
 // ══════════════════════════════════════════════
-urlInput.addEventListener('keydown', e => { if(e.key==='Enter') doLoad(false); });
-renderProxyList();
-addHeaderRow();
-addCookieKV();
-tlog('Nexus Loader v2 initialized.','info');
-tlog('Direct = raw browser fetch | Proxy = CORS bypass with fallback chain.','');
-tlog('Configure headers, cookies, proxies in the side panel (⚙).','');
+urlInput.addEventListener('keydown', e => { if(e.key==='Enter') doLoad(); });
+window.addEventListener('DOMContentLoaded', init);
+// DOMContentLoaded may have already fired; call directly too
+init();
 
-// ══════════════════════════════════════════════
-//  LOGGING
-// ══════════════════════════════════════════════
-function tlog(msg, cls='') {
-  const vt = $('vTerminal');
-  const d  = document.createElement('div');
-  d.className = 'll ' + cls;
-  d.innerHTML = `<span class="ts">${ts()}</span><span class="msg">${esc(msg)}</span>`;
-  vt.appendChild(d);
-  vt.scrollTop = vt.scrollHeight;
-}
-function ts() { return new Date().toLocaleTimeString('en-US',{hour12:false}); }
-function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
-
-// ══════════════════════════════════════════════
-//  STATUS
-// ══════════════════════════════════════════════
-function setStatus(state, msg) {
-  sdot.className = 'sdot' + (state ? ' '+state : '');
-  stext.textContent = msg;
-}
-function setTags(type, isProxy) {
-  if(type){ ttag.style.display='inline-block'; ttag.textContent=type.toUpperCase(); }
-  else ttag.style.display='none';
-  ptag.style.display = isProxy ? 'inline-block' : 'none';
+async function init() {
+  showView('vTerminal');
+  tlog('Nexus Encrypted Proxy initializing...', 'info');
+  await generateKeyPair();
+  renderWorkerPanel();
+  addHeaderRow();
+  tlog('ECDH keypair ready. Set your Worker URL in the panel to begin.', 'ok');
+  if(!WORKER_URL) tlog('⚠ No Worker URL set — open ⚙ panel → Worker tab', 'warn');
 }
 
 // ══════════════════════════════════════════════
-//  VIEW SWITCHING
+//  ECDH KEY GENERATION
 // ══════════════════════════════════════════════
-const viewIds = ['vTerminal','vCode','vJson','vHtml','vImage','vMarkdown','vBinary'];
-function showView(id) {
-  viewIds.forEach(v => {
-    const el = $(v);
-    if(el) { el.classList.toggle('active', v===id); el.style.display = v===id ? 'flex' : 'none'; }
-  });
-  // restore flex-direction for views that need column
-  ['vCode','vJson','vMarkdown'].forEach(v => { if(v===id && $(v)) $(v).style.flexDirection='column'; });
-}
-// Init: show terminal
-showView('vTerminal'); $('vTerminal').style.display='flex'; $('vTerminal').style.flexDirection='column';
+async function generateKeyPair() {
+  const pair = await crypto.subtle.generateKey(
+    { name: 'ECDH', namedCurve: 'P-256' },
+    true,
+    ['deriveKey', 'deriveBits']
+  );
+  clientPrivateKey = pair.privateKey;
 
-// ══════════════════════════════════════════════
-//  PANEL
-// ══════════════════════════════════════════════
-function togglePanel() {
-  panelOpen = !panelOpen;
-  $('sidePanel').classList.toggle('collapsed', !panelOpen);
-}
-function switchPTab(n) {
-  activePTab = n;
-  document.querySelectorAll('.ptab').forEach((t,i) => t.classList.toggle('active', i===n));
-  ['pt0','pt1','pt2','pt3','pt4'].forEach((id,i) => $(id).style.display = i===n ? 'block' : 'none');
+  // Export public key as base64 to send to worker
+  const pubRaw = await crypto.subtle.exportKey('raw', pair.publicKey);
+  clientPublicKeyB64 = btoa(String.fromCharCode(...new Uint8Array(pubRaw)));
+
+  const fp = await keyFingerprint(pair.publicKey);
+  tlog('Public key fingerprint: ' + fp, '');
+  updateKeyDisplay(fp);
 }
 
-// ══════════════════════════════════════════════
-//  HEADER ROWS
-// ══════════════════════════════════════════════
-function addHeaderRow(k='',v='') {
-  const id = Date.now()+Math.random();
-  headerRows.push({id,k,v});
-  renderHeaderRows();
+async function keyFingerprint(pubKey) {
+  const raw = await crypto.subtle.exportKey('raw', pubKey);
+  const hash = await crypto.subtle.digest('SHA-256', raw);
+  return Array.from(new Uint8Array(hash)).slice(0,8)
+    .map(b => b.toString(16).padStart(2,'0')).join(':');
 }
-function addPreset(k,v){ addHeaderRow(k,v); }
-function renderHeaderRows() {
-  const c = $('headerRows'); c.innerHTML='';
-  headerRows.forEach(r => {
-    const row = document.createElement('div');
-    row.className='kv-row';
-    row.innerHTML=`<input placeholder="Header" value="${esc(r.k)}" oninput="updRow('headers','${r.id}','k',this.value)">
-      <input placeholder="Value" value="${esc(r.v)}" oninput="updRow('headers','${r.id}','v',this.value)">
-      <button class="kv-del" onclick="delRow('headers','${r.id}')">✕</button>`;
-    c.appendChild(row);
-  });
-}
-function updRow(type,id,field,val) {
-  const arr = type==='headers'?headerRows:cookieRows;
-  const r = arr.find(r=>String(r.id)===id); if(r) r[field]=val;
-}
-function delRow(type,id) {
-  if(type==='headers') headerRows=headerRows.filter(r=>String(r.id)!==id), renderHeaderRows();
-  else cookieRows=cookieRows.filter(r=>String(r.id)!==id), renderCookieKVRows();
+
+function updateKeyDisplay(fp) {
+  const el = $('keyFp');
+  if(el) el.textContent = fp || '—';
 }
 
 // ══════════════════════════════════════════════
-//  COOKIE ROWS
+//  AES KEY DERIVATION FROM WORKER PUBLIC KEY
+//  Called once per session after first response
 // ══════════════════════════════════════════════
-function addCookieKV(k='',v='') {
-  cookieRows.push({id:Date.now()+Math.random(),k,v});
-  renderCookieKVRows();
-}
-function clearCookies(){ $('cookieInput').value=''; cookieRows=[]; renderCookieKVRows(); }
-function parseCookieKV() {
-  const raw = $('cookieInput').value.trim();
-  if(!raw) return;
-  raw.split(';').forEach(pair => {
-    const idx = pair.indexOf('=');
-    if(idx<0) return;
-    addCookieKV(pair.slice(0,idx).trim(), pair.slice(idx+1).trim());
-  });
-}
-function renderCookieKVRows() {
-  const c = $('cookieKVRows'); c.innerHTML='';
-  cookieRows.forEach(r => {
-    const row = document.createElement('div');
-    row.className='kv-row';
-    row.innerHTML=`<input placeholder="Name" value="${esc(r.k)}" oninput="updRow('cookies','${r.id}','k',this.value)">
-      <input placeholder="Value" value="${esc(r.v)}" oninput="updRow('cookies','${r.id}','v',this.value)">
-      <button class="kv-del" onclick="delRow('cookies','${r.id}')">✕</button>`;
-    c.appendChild(row);
-  });
+async function deriveAESKey(workerPublicKeyB64) {
+  // Decode worker's ephemeral public key
+  const raw = Uint8Array.from(atob(workerPublicKeyB64), c => c.charCodeAt(0));
+  const workerPub = await crypto.subtle.importKey(
+    'raw', raw,
+    { name: 'ECDH', namedCurve: 'P-256' },
+    false, []
+  );
+
+  // Derive shared secret bits
+  const bits = await crypto.subtle.deriveBits(
+    { name: 'ECDH', public: workerPub },
+    clientPrivateKey, 256
+  );
+
+  // Derive AES-256-GCM key from shared bits via HKDF
+  const hkdfKey = await crypto.subtle.importKey('raw', bits, 'HKDF', false, ['deriveKey']);
+  sessionAESKey = await crypto.subtle.deriveKey(
+    { name: 'HKDF', hash: 'SHA-256',
+      salt: new TextEncoder().encode('nexus-proxy-v1'),
+      info: new TextEncoder().encode('aes-gcm-key') },
+    hkdfKey,
+    { name: 'AES-GCM', length: 256 },
+    false, ['decrypt']
+  );
+  tlog('Session AES-256-GCM key derived from ECDH exchange', 'ok');
 }
 
-// Build cookie string from all sources
-function buildCookieHeader() {
-  const parts = [];
-  // From textarea
-  const raw = $('cookieInput').value.trim();
-  if(raw) parts.push(raw);
-  // From KV rows
-  cookieRows.forEach(r => { if(r.k) parts.push(`${r.k}=${r.v}`); });
-  return parts.join('; ');
+// ══════════════════════════════════════════════
+//  DECRYPT RESPONSE FROM WORKER
+// ══════════════════════════════════════════════
+async function decryptResponse(payload) {
+  // payload = { workerPubKey, iv, ct, contentType }
+  // Derive key if not yet done or if worker sent a new ephemeral key
+  if(!sessionAESKey || payload.workerPubKey) {
+    await deriveAESKey(payload.workerPubKey);
+  }
+
+  const iv = Uint8Array.from(atob(payload.iv), c => c.charCodeAt(0));
+  const ct = Uint8Array.from(atob(payload.ct), c => c.charCodeAt(0));
+
+  const plainBuf = await crypto.subtle.decrypt(
+    { name: 'AES-GCM', iv },
+    sessionAESKey, ct
+  );
+  return { bytes: new Uint8Array(plainBuf), contentType: payload.contentType };
 }
 
-// Build extra headers object
-function buildHeaders() {
+// ══════════════════════════════════════════════
+//  MAIN LOAD
+// ══════════════════════════════════════════════
+async function doLoad(useEncryptedProxy) {
+  // Default: always use encrypted proxy if worker is set
+  if(useEncryptedProxy === undefined) useEncryptedProxy = !!WORKER_URL;
+
+  const url = urlInput.value.trim();
+  if(!url) return tlog('Enter a URL first', 'err');
+  if(!WORKER_URL) return tlog('Set your Worker URL in ⚙ panel → Worker tab', 'err');
+  if(!clientPublicKeyB64) return tlog('Keypair not ready — wait a moment', 'err');
+
+  showView('vTerminal');
+  setStatus('loading', 'Requesting encrypted fetch...');
+  tlog('[ENCRYPTED] → ' + url, 'info');
+
+  try {
+    // Send target URL + our public key to the worker
+    const res = await fetch(WORKER_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        url: url,
+        clientPubKey: clientPublicKeyB64,
+        headers: buildCustomHeaders()
+      })
+    });
+
+    if(!res.ok) {
+      const err = await res.text();
+      throw new Error('Worker error ' + res.status + ': ' + err);
+    }
+
+    const payload = await res.json();
+
+    if(payload.error) throw new Error('Worker: ' + payload.error);
+
+    tlog('Encrypted payload received — ' + fmtSize(payload.ct.length * 0.75) + ' ciphertext', '');
+    tlog('Decrypting locally...', '');
+
+    const { bytes, contentType } = await decryptResponse(payload);
+    tlog('Decrypted: ' + fmtSize(bytes.length) + ' | type: ' + contentType, 'ok');
+
+    rawBlob = new Blob([bytes], { type: contentType });
+    renderByType(bytes, contentType, url);
+    setStatus('ok', 'Decrypted — ' + fmtSize(bytes.length));
+    $('btnCopy').disabled = false;
+    $('btnDl').disabled   = false;
+
+  } catch(err) {
+    tlog('Failed: ' + err.message, 'err');
+    setStatus('err', err.message);
+  }
+}
+
+// ── Fallback direct load (no worker, no encryption) ──
+async function doDirectLoad() {
+  const url = urlInput.value.trim();
+  if(!url) return tlog('Enter a URL first', 'err');
+
+  showView('vTerminal');
+  setStatus('loading', 'Direct fetch (unencrypted)...');
+  tlog('[DIRECT] → ' + url, 'warn');
+
+  try {
+    const res = await fetch(url, { headers: buildCustomHeaders() });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    const ct = res.headers.get('content-type') || '';
+    const bytes = new Uint8Array(await res.arrayBuffer());
+    rawBlob = new Blob([bytes], { type: ct });
+    renderByType(bytes, ct, url);
+    setStatus('ok', 'Loaded (unencrypted) — ' + fmtSize(bytes.length));
+    $('btnCopy').disabled = false;
+    $('btnDl').disabled   = false;
+  } catch(err) {
+    tlog('Direct load failed: ' + err.message, 'err');
+    tlog('CORS blocked? Use the encrypted proxy instead.', 'warn');
+    setStatus('err', err.message);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  RENDER BY CONTENT TYPE
+// ══════════════════════════════════════════════
+function renderByType(bytes, contentType, url) {
+  const ct = contentType.split(';')[0].trim().toLowerCase();
+  const text = new TextDecoder().decode(bytes);
+
+  if(ct.includes('json')) {
+    showView('vJson');
+    try {
+      const parsed = JSON.parse(text);
+      const tree = $('jsonTree'); tree.innerHTML = '';
+      tree.appendChild(buildJNode(parsed, null));
+    } catch { $('jsonTree').textContent = text; }
+
+  } else if(ct.includes('html')) {
+    showView('vHtml');
+    $('htmlFrame').srcdoc = text;
+
+  } else if(ct.startsWith('image/')) {
+    showView('vImage');
+    $('imgEl').src = URL.createObjectURL(new Blob([bytes], {type: ct}));
+
+  } else if(ct.includes('javascript') || ct.includes('css') || ct.includes('xml') || ct.includes('text')) {
+    showView('vCode');
+    const block = $('codeBlock');
+    block.textContent = text;
+    const lang = ct.includes('javascript') ? 'javascript'
+               : ct.includes('css') ? 'css'
+               : ct.includes('xml') ? 'xml' : 'plaintext';
+    block.className = 'language-' + lang;
+    if(window.hljs) hljs.highlightElement(block);
+
+  } else {
+    // Binary fallback
+    showView('vBinary');
+    const name = url.split('/').pop().split('?')[0] || 'file';
+    $('binName').textContent = name;
+    $('binSize').textContent = fmtSize(bytes.length);
+    $('binType').textContent = ct || 'unknown';
+  }
+}
+
+// Simple JSON tree (collapsed version)
+function buildJNode(val, key) {
+  const w = document.createElement('div');
+  w.style.cssText = 'font-size:11px;line-height:1.8;font-family:monospace';
+  const kh = key !== null ? '<span style="color:#79b8ff">"' + esc(key) + '"</span>: ' : '';
+  if(val === null) w.innerHTML = kh + '<span style="color:#888;font-style:italic">null</span>';
+  else if(typeof val === 'boolean') w.innerHTML = kh + '<span style="color:#ff7b72">' + val + '</span>';
+  else if(typeof val === 'number')  w.innerHTML = kh + '<span style="color:#f8c555">' + val + '</span>';
+  else if(typeof val === 'string')  w.innerHTML = kh + '<span style="color:#9ecbff">"' + esc(val) + '"</span>';
+  else {
+    const isArr = Array.isArray(val);
+    const entries = isArr ? val : Object.keys(val);
+    const summary = document.createElement('div');
+    summary.style.cursor = 'pointer';
+    summary.innerHTML = kh + '<span style="color:#6e7f8e">' + (isArr ? '[' : '{') + ' ' + entries.length + (isArr?' items':' keys') + ' </span>';
+    const children = document.createElement('div');
+    children.style.paddingLeft = '16px';
+    let open = true;
+    summary.onclick = () => { open = !open; children.style.display = open ? '' : 'none'; };
+    (isArr ? val : Object.keys(val)).forEach((k,i) => {
+      children.appendChild(buildJNode(isArr ? k : val[k], isArr ? null : k));
+    });
+    w.appendChild(summary); w.appendChild(children);
+  }
+  return w;
+}
+
+// ══════════════════════════════════════════════
+//  CUSTOM HEADERS BUILDER
+// ══════════════════════════════════════════════
+function buildCustomHeaders() {
   const h = {};
-  headerRows.forEach(r => { if(r.k) h[r.k] = r.v; });
-  const cookie = buildCookieHeader();
+  headerRows.forEach(r => { if(r.k && r.v) h[r.k] = r.v; });
+  const cookie = $('cookieInput') ? $('cookieInput').value.trim() : '';
   if(cookie) h['Cookie'] = cookie;
   return h;
 }
 
 // ══════════════════════════════════════════════
-//  PROXY LIST
+//  WORKER URL PANEL
 // ══════════════════════════════════════════════
-function addCustomProxy() {
-  const v = $('customProxyInput').value.trim();
-  if(!v) return;
-  PROXIES.push({ name:'custom', url:v, parser:'raw', status:'idle' });
-  $('customProxyInput').value='';
-  renderProxyList();
+function renderWorkerPanel() {
+  const pt2 = $('pt2');
+  if(!pt2) return;
+  pt2.innerHTML = '';
+
+  pt2.innerHTML = [
+    '<div class="panel-section">',
+    '  <div class="panel-label">Cloudflare Worker URL</div>',
+    '  <div style="display:flex;gap:5px;margin-bottom:6px">',
+    '    <input id="workerUrlInput" class="kv-row" style="flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text-b);padding:5px 8px;border-radius:4px;font-family:monospace;font-size:10px;outline:none" placeholder="https://your-worker.workers.dev" value="' + esc(WORKER_URL) + '">',
+    '    <button class="btn sm" onclick="saveWorkerUrl()">Save</button>',
+    '  </div>',
+    '  <div class="info-box" id="workerStatus">' + (WORKER_URL ? '✓ Worker set' : 'No worker configured') + '</div>',
+    '</div>',
+    '<div class="panel-section">',
+    '  <div class="panel-label">Session Key</div>',
+    '  <div class="info-box" style="word-break:break-all;line-height:1.8">',
+    '    Fingerprint: <span id="keyFp" style="color:var(--accent)">generating...</span><br>',
+    '    Curve: P-256 (ECDH)<br>',
+    '    Cipher: AES-256-GCM<br>',
+    '    KDF: HKDF-SHA-256',
+    '  </div>',
+    '  <button class="btn sm" onclick="rotateKeys()" style="margin-top:6px;border-color:var(--yellow);color:var(--yellow)">↻ Rotate Keys</button>',
+    '</div>',
+    '<div class="panel-section">',
+    '  <div class="panel-label">How it works</div>',
+    '  <div class="info-box" style="line-height:1.75">',
+    '    1. Browser generates ECDH P-256 keypair<br>',
+    '    2. Public key sent to Worker with request<br>',
+    '    3. Worker generates its own ephemeral keypair<br>',
+    '    4. Worker derives shared AES key via ECDH<br>',
+    '    5. Worker encrypts response → sends ciphertext<br>',
+    '    6. Browser derives same AES key, decrypts<br><br>',
+    '    <b style="color:var(--green)">Network payload is pure ciphertext.</b><br>',
+    '    Private key never leaves this tab.',
+    '  </div>',
+    '</div>',
+    '<div class="panel-section">',
+    '  <div class="panel-label">Deploy Worker</div>',
+    '  <div class="info-box" style="line-height:1.75">',
+    '    1. Go to <b>workers.cloudflare.com</b> (free)<br>',
+    '    2. Create new Worker<br>',
+    '    3. Paste the <b>worker.js</b> file provided<br>',
+    '    4. Deploy → copy URL → paste above',
+    '  </div>',
+    '</div>'
+  ].join('\n');
+
+  // Re-run fingerprint display now that the element exists
+  if(clientPublicKeyB64) {
+    crypto.subtle.importKey('raw',
+      Uint8Array.from(atob(clientPublicKeyB64), c => c.charCodeAt(0)),
+      { name:'ECDH', namedCurve:'P-256' }, true, []
+    ).then(k => keyFingerprint(k)).then(updateKeyDisplay).catch(()=>{});
+  }
 }
-function renderProxyList() {
-  const c = $('proxyList'); c.innerHTML='';
-  PROXIES.forEach((p,i) => {
-    const d = document.createElement('div');
-    d.className = 'proxy-item ' + (p.status==='ok'?'active':p.status==='fail'?'failed':p.status==='trying'?'trying':'');
-    d.innerHTML=`<div class="proxy-dot"></div><div class="proxy-name">${esc(p.name)}</div><div class="proxy-badge">${p.status==='ok'?'✓':p.status==='fail'?'✗':''}</div>`;
-    c.appendChild(d);
+
+function saveWorkerUrl() {
+  const v = ($('workerUrlInput') || {}).value || '';
+  WORKER_URL = v.trim().replace(/\/$/, '');
+  localStorage.setItem('nexus_worker_url', WORKER_URL);
+  const ws = $('workerStatus');
+  if(ws) ws.innerHTML = WORKER_URL
+    ? '<span style="color:var(--green)">✓ Saved: ' + esc(WORKER_URL) + '</span>'
+    : '<span style="color:var(--red)">Cleared</span>';
+  tlog('Worker URL ' + (WORKER_URL ? 'set: ' + WORKER_URL : 'cleared'), WORKER_URL ? 'ok' : 'warn');
+}
+
+async function rotateKeys() {
+  sessionAESKey = null;
+  await generateKeyPair();
+  renderWorkerPanel();
+  tlog('Keys rotated. New ECDH keypair generated.', 'ok');
+}
+
+// ══════════════════════════════════════════════
+//  UI HELPERS
+// ══════════════════════════════════════════════
+function showView(id) {
+  viewIds.forEach(v => {
+    const el = $(v);
+    if(el) el.style.display = v === id ? 'flex' : 'none';
   });
 }
-function setProxyStatus(i, s) { PROXIES[i].status=s; renderProxyList(); }
 
-// ══════════════════════════════════════════════
-//  TYPE DETECTION
-// ══════════════════════════════════════════════
-const IMAGE_EXTS  = /\.(png|jpe?g|gif|webp|svg|ico|bmp|avif)(\?|$)/i;
-const BINARY_EXTS = /\.(pdf|zip|gz|tar|7z|rar|exe|dmg|pkg|deb|rpm|wasm|ttf|otf|woff2?|mp3|mp4|webm|ogg|flac|wav)(\?|$)/i;
-
-function detectType(url, ct='', body='') {
-  const u = url.split('?')[0];
-  if(ct.includes('image/') || IMAGE_EXTS.test(u))            return 'image';
-  if(BINARY_EXTS.test(u) || ct.includes('application/octet')) return 'binary';
-  if(ct.includes('application/json') || /\.json$/i.test(u))  return 'json';
-  if(ct.includes('text/html') || /\.html?$/i.test(u))        return 'html';
-  if(/\.(md|markdown)$/i.test(u))                             return 'markdown';
-  if(/\.(js|mjs|ts|jsx|tsx)$/i.test(u) || ct.includes('javascript')) return 'javascript';
-  if(/\.css$/i.test(u) || ct.includes('text/css'))            return 'css';
-  if(/\.(xml|rss|atom)$/i.test(u) || ct.includes('xml'))     return 'xml';
-  // Body sniff
-  const t = (body||'').trimStart();
-  if(t.startsWith('{') || t.startsWith('['))   return 'json';
-  if(/^<!doctype html/i.test(t) || t.startsWith('<html')) return 'html';
-  if(t.startsWith('<?xml'))                    return 'xml';
-  if(/^#{1,6}\s|^\*\*|^---\n/.test(t))        return 'markdown';
-  return 'text';
+function setStatus(state, msg) {
+  sdot.className = 'sdot' + (state ? ' ' + state : '');
+  stext.textContent = msg;
 }
 
-function isImage(type) { return type==='image'; }
-function isBinary(type){ return type==='binary'; }
-function isCode(type)  { return ['javascript','css','xml','text'].includes(type); }
-
-// ══════════════════════════════════════════════
-//  EMBED DETECTION — sites that block all proxies
-// ══════════════════════════════════════════════
-
-// Returns an embed config if URL matches a known walled-garden site, else null.
-function detectEmbed(url) {
-  let m;
-
-  // YouTube — watch, shorts, live
-  m = url.match(/(?:youtube\.com\/(?:watch\?v=|shorts\/|live\/)|youtu\.be\/)([a-zA-Z0-9_-]{11})/);
-  if(m) return { type:'youtube', id:m[1], label:'YouTube',
-    embed:`https://www.youtube.com/embed/${m[1]}?autoplay=0` };
-
-  // Twitter / X — individual tweet
-  m = url.match(/(?:twitter\.com|x\.com)\/\w+\/status\/(\d+)/);
-  if(m) return { type:'tweet', id:m[1], label:'Twitter / X',
-    embed: null, // Twitter embed needs JS widget; we'll inject it
-    tweetId: m[1] };
-
-  // Instagram — post or reel
-  m = url.match(/instagram\.com\/(?:p|reel|tv)\/([A-Za-z0-9_-]+)/);
-  if(m) return { type:'instagram', id:m[1], label:'Instagram',
-    embed:`https://www.instagram.com/p/${m[1]}/embed/` };
-
-  // TikTok — video
-  m = url.match(/tiktok\.com\/@[^/]+\/video\/(\d+)/);
-  if(m) return { type:'tiktok', id:m[1], label:'TikTok',
-    embed:`https://www.tiktok.com/embed/v2/${m[1]}` };
-
-  // Spotify — track/album/playlist/episode
-  m = url.match(/open\.spotify\.com\/(track|album|playlist|episode|show)\/([A-Za-z0-9]+)/);
-  if(m) return { type:'spotify', id:m[2], label:'Spotify',
-    embed:`https://open.spotify.com/embed/${m[1]}/${m[2]}` };
-
-  // SoundCloud — any page (use their oEmbed)
-  if(/soundcloud\.com\//.test(url)) return { type:'soundcloud', label:'SoundCloud',
-    embed:`https://w.soundcloud.com/player/?url=${encodeURIComponent(url)}&color=%2300d4ff&auto_play=false` };
-
-  // GitHub — many cases
-  m = url.match(/github\.com\/([^/?#]+)(?:\/([^/?#]+))?(?:\/blob\/([^/]+)\/(.+))?/);
-  if(m) {
-    const [, owner, repo, branch, filepath] = m;
-    if(filepath && branch) {
-      // Blob file → redirect to raw
-      const rawUrl = `https://raw.githubusercontent.com/${owner}/${repo}/${branch}/${filepath}`;
-      return { type:'github_raw', label:'GitHub (raw file)', redirect: rawUrl };
-    }
-    if(repo) {
-      // Repo page → use GitHub API to show repo info + README
-      return { type:'github_repo', label:'GitHub Repo', owner, repo };
-    }
-    // User profile or root → use GitHub API
-    if(owner && owner !== '') {
-      return { type:'github_user', label:'GitHub User', owner };
-    }
-    // github.com root
-    return { type:'iframe_blocked', label:'GitHub', url };
-  }
-
-  // Codepen
-  m = url.match(/codepen\.io\/([^/]+)\/pen\/([^/?]+)/);
-  if(m) return { type:'codepen', label:'CodePen',
-    embed:`https://codepen.io/${m[1]}/embed/${m[2]}?default-tab=result&theme-id=dark` };
-
-  // JSFiddle
-  m = url.match(/jsfiddle\.net\/([^/]+\/[^/]+)/);
-  if(m) return { type:'jsfiddle', label:'JSFiddle',
-    embed:`https://jsfiddle.net/${m[1]}/embedded/result,html,css,js/dark/` };
-
-  // Sites known to block iframes entirely — show info card with open button
-  const IFRAME_BLOCKED = [
-    'github.com','google.com','facebook.com','twitter.com','x.com',
-    'linkedin.com','reddit.com','amazon.com','netflix.com','twitch.tv',
-    'discord.com','slack.com','notion.so','figma.com'
-  ];
-  try {
-    const hostname = new URL(url).hostname.replace('www.','');
-    if(IFRAME_BLOCKED.some(b => hostname===b || hostname.endsWith('.'+b))) {
-      return { type:'iframe_blocked', label: hostname, url };
-    }
-  } catch {}
-
-  return null;
+function tlog(msg, cls) {
+  cls = cls || '';
+  const vt = $('vTerminal');
+  if(!vt) return;
+  const d = document.createElement('div');
+  d.className = 'll ' + cls;
+  d.innerHTML = '<span class="ts">' + new Date().toLocaleTimeString('en-US',{hour12:false}) + '</span>'
+              + '<span class="msg" style="margin-left:8px">' + esc(msg) + '</span>';
+  vt.appendChild(d);
+  vt.scrollTop = vt.scrollHeight;
 }
 
-function renderEmbed(cfg, url) {
-  setTags('embed', false);
-  addHist(url, 'embed');
-
-  // ── GitHub Repo via API ──
-  if(cfg.type === 'github_repo') {
-    renderGitHubRepo(cfg.owner, cfg.repo, url);
-    return;
-  }
-
-  // ── GitHub User via API ──
-  if(cfg.type === 'github_user') {
-    renderGitHubUser(cfg.owner, url);
-    return;
-  }
-
-  // ── Iframe-blocked site — show info card ──
-  if(cfg.type === 'iframe_blocked') {
-    $('btnCopy').disabled = true;
-    $('btnDl').disabled   = true;
-    setStatus('err', `${cfg.label} — iframe blocked by site policy`);
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
-    <style>
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{background:#07090d;display:flex;align-items:center;justify-content:center;
-           min-height:100vh;font-family:'JetBrains Mono',monospace;color:#c9d1d9;padding:30px}
-      .card{background:#0d1117;border:1px solid #1c2a38;border-radius:10px;padding:32px;
-            max-width:480px;width:100%;text-align:center}
-      .icon{font-size:40px;margin-bottom:16px;opacity:.4}
-      h2{font-size:16px;color:#e6edf3;margin-bottom:8px}
-      p{font-size:11px;color:#6e7f8e;line-height:1.7;margin-bottom:20px}
-      .url{background:#111820;border:1px solid #1c2a38;border-radius:4px;padding:8px;
-           font-size:10px;color:#00d4ff;word-break:break-all;margin-bottom:20px}
-      a{display:inline-block;background:#00d4ff;color:#07090d;padding:9px 20px;border-radius:5px;
-        text-decoration:none;font-size:11px;font-weight:600}
-      .why{margin-top:18px;font-size:10px;color:#3a4a5a;line-height:1.6}
-    </style></head><body>
-    <div class="card">
-      <div class="icon">⊗</div>
-      <h2>${esc(cfg.label)} blocks iframe embedding</h2>
-      <p>This site sends <code>X-Frame-Options: DENY</code> or a strict <code>Content-Security-Policy</code> that prevents it from loading inside any iframe — including CORS proxies.</p>
-      <div class="url">${esc(url)}</div>
-      <a href="${esc(url)}" target="_blank" rel="noopener">Open in New Tab ↗</a>
-      <div class="why">This is a browser security feature that cannot be bypassed from a web page.</div>
-    </div>
-    </body></html>`;
-    $('htmlFrame').srcdoc = html;
-    showView('vHtml');
-    return;
-  }
-
-  $('btnCopy').disabled = true;
-  $('btnDl').disabled   = true;
-  setStatus('ok', `${cfg.label} — embedded view`);
-
-  // Twitter needs special widget injection
-  if(cfg.type === 'tweet') {
-    const html = `<!DOCTYPE html><html><head>
-      <meta charset="utf-8">
-      <style>body{margin:0;display:flex;justify-content:center;padding:20px;background:#0d1117;font-family:sans-serif}</style>
-    </head><body>
-      <blockquote class="twitter-tweet" data-theme="dark">
-        <a href="${esc(url)}"></a>
-      </blockquote>
-      <script async src="https://platform.twitter.com/widgets.js"><\/script>
-    </body></html>`;
-    $('htmlFrame').srcdoc = html;
-    showView('vHtml');
-    return;
-  }
-
-  // Everything else uses a plain iframe embed URL
-  const iframeH = ['youtube','spotify'].includes(cfg.type) ? '315' : '100%';
-  const html = `<!DOCTYPE html><html><head>
-    <meta charset="utf-8">
-    <style>
-      *{margin:0;padding:0;box-sizing:border-box}
-      body{background:#07090d;display:flex;align-items:center;justify-content:center;min-height:100vh}
-      iframe{width:${cfg.type==='youtube'?'560':'100%'};height:${iframeH==='100%'?'100vh':iframeH+'px'};
-             max-width:100%;border:none;border-radius:8px}
-    </style>
-  </head><body>
-    <iframe src="${cfg.embed}" allowfullscreen allow="autoplay; encrypted-media; clipboard-write; picture-in-picture" loading="lazy"></iframe>
-  </body></html>`;
-  $('htmlFrame').srcdoc = html;
-  showView('vHtml');
+function togglePanel() {
+  panelOpen = !panelOpen;
+  $('sidePanel').classList.toggle('collapsed', !panelOpen);
 }
 
-// ── GitHub Repo Card via public API ──
-async function renderGitHubRepo(owner, repo, originalUrl) {
-  setStatus('loading', `Fetching GitHub repo: ${owner}/${repo}...`);
-  tlog(`GitHub API → repos/${owner}/${repo}`, 'info');
-  try {
-    const [repoRes, readmeRes, langsRes] = await Promise.allSettled([
-      fetch(`https://api.github.com/repos/${owner}/${repo}`),
-      fetch(`https://api.github.com/repos/${owner}/${repo}/readme`),
-      fetch(`https://api.github.com/repos/${owner}/${repo}/languages`)
-    ]);
-
-    const repoData  = repoRes.status==='fulfilled' && repoRes.value.ok  ? await repoRes.value.json()  : null;
-    const readmeData= readmeRes.status==='fulfilled' && readmeRes.value.ok ? await readmeRes.value.json() : null;
-    const langsData = langsRes.status==='fulfilled' && langsRes.value.ok  ? await langsRes.value.json()  : null;
-
-    if(!repoData) throw new Error('Repo not found or API rate limited');
-
-    let readmeText = '';
-    if(readmeData?.content) {
-      try { readmeText = atob(readmeData.content.replace(/\n/g,'')); } catch {}
-    }
-
-    const langs = langsData ? Object.keys(langsData).slice(0,6) : [];
-    const totalBytes = langsData ? Object.values(langsData).reduce((a,b)=>a+b,0) : 0;
-    const langBars = langs.map(l => {
-      const pct = ((langsData[l]/totalBytes)*100).toFixed(1);
-      const colors = {JavaScript:'#f1e05a',TypeScript:'#3178c6',Python:'#3572A5',Rust:'#dea584',Go:'#00ADD8',CSS:'#563d7c',HTML:'#e34c26',C:'#555555','C++':'#f34b7d','C#':'#178600',Java:'#b07219',Lua:'#000080'};
-      return `<div style="display:flex;align-items:center;gap:8px;margin:3px 0">
-        <div style="width:10px;height:10px;border-radius:50%;background:${colors[l]||'#888'};flex-shrink:0"></div>
-        <span style="flex:1;font-size:10px">${l}</span>
-        <span style="font-size:10px;color:#6e7f8e">${pct}%</span>
-        <div style="width:80px;height:4px;background:#1c2a38;border-radius:2px">
-          <div style="width:${pct}%;height:100%;background:${colors[l]||'#888'};border-radius:2px"></div>
-        </div>
-      </div>`;
-    }).join('');
-
-    const readmeHtml = readmeText ? marked.parse(readmeText) : '<p style="color:#6e7f8e">No README</p>';
-
-    rawContent = readmeText;
-    rawType = 'markdown';
-    rawMeta = { url: originalUrl, proxy: 'github-api', size: readmeText.length };
-    updateInfo();
-    $('btnCopy').disabled = !readmeText;
-    $('btnDl').disabled = !readmeText;
-    setStatus('ok', `GitHub — ${owner}/${repo}`);
-    setTags('github', false);
-
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600&family=Syne:wght@700&display=swap" rel="stylesheet">
-    <style>
-      *{box-sizing:border-box;margin:0;padding:0}
-      body{background:#07090d;color:#c9d1d9;font-family:'JetBrains Mono',monospace;font-size:12px;padding:20px;line-height:1.6}
-      .header{display:flex;align-items:flex-start;gap:16px;margin-bottom:20px}
-      .avatar{width:52px;height:52px;border-radius:50%;border:2px solid #1c2a38}
-      .meta{flex:1}
-      .repo-name{font-family:'Syne',sans-serif;font-size:18px;color:#e6edf3;font-weight:700}
-      .repo-name a{color:#00d4ff;text-decoration:none}
-      .desc{color:#8b949e;margin-top:4px;font-size:11px}
-      .topics{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
-      .topic{background:rgba(0,212,255,.1);color:#00d4ff;border:1px solid rgba(0,212,255,.2);
-             padding:2px 8px;border-radius:12px;font-size:9px}
-      .stats{display:flex;gap:16px;margin:14px 0;font-size:11px;color:#8b949e}
-      .stat{display:flex;align-items:center;gap:5px}
-      .stat b{color:#e6edf3}
-      .langs{background:#0d1117;border:1px solid #1c2a38;border-radius:6px;padding:12px;margin-bottom:16px}
-      .section-title{font-size:9px;letter-spacing:.1em;color:#6e7f8e;text-transform:uppercase;margin-bottom:8px}
-      .readme{background:#0d1117;border:1px solid #1c2a38;border-radius:6px;padding:20px}
-      .readme h1,.readme h2,.readme h3{font-family:'Syne',sans-serif;color:#e6edf3;margin:1em 0 .4em;border-bottom:1px solid #1c2a38;padding-bottom:6px}
-      .readme p{margin:.6em 0;color:#c9d1d9;line-height:1.7}
-      .readme code{background:#161f2a;padding:1px 5px;border-radius:3px;color:#00d4ff;font-size:10px}
-      .readme pre{background:#111820;border:1px solid #1c2a38;border-radius:4px;padding:12px;margin:.8em 0;overflow-x:auto}
-      .readme pre code{background:none;color:#c9d1d9}
-      .readme a{color:#00d4ff}
-      .readme img{max-width:100%;border-radius:4px}
-      .readme ul,.readme ol{padding-left:20px}
-      .open-btn{display:inline-block;margin-top:12px;background:#00d4ff;color:#07090d;
-                padding:7px 16px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:600}
-    </style></head><body>
-    <div class="header">
-      <img class="avatar" src="${repoData.owner?.avatar_url||''}" alt="">
-      <div class="meta">
-        <div class="repo-name"><a href="${repoData.html_url}" target="_blank">${esc(owner)}/${esc(repo)}</a></div>
-        <div class="desc">${esc(repoData.description||'No description')}</div>
-        <div class="topics">${(repoData.topics||[]).map(t=>`<span class="topic">${esc(t)}</span>`).join('')}</div>
-      </div>
-    </div>
-    <div class="stats">
-      <div class="stat">⭐ <b>${(repoData.stargazers_count||0).toLocaleString()}</b> stars</div>
-      <div class="stat">⑂ <b>${(repoData.forks_count||0).toLocaleString()}</b> forks</div>
-      <div class="stat">👁 <b>${(repoData.watchers_count||0).toLocaleString()}</b> watchers</div>
-      ${repoData.language?`<div class="stat">◈ <b>${esc(repoData.language)}</b></div>`:''}
-      ${repoData.license?.spdx_id?`<div class="stat">⚖ <b>${esc(repoData.license.spdx_id)}</b></div>`:''}
-    </div>
-    ${langs.length?`<div class="langs"><div class="section-title">Languages</div>${langBars}</div>`:''}
-    <div class="readme">
-      <div class="section-title">README</div>
-      ${readmeHtml}
-    </div>
-    <a class="open-btn" href="${repoData.html_url}" target="_blank" rel="noopener">Open on GitHub ↗</a>
-    </body></html>`;
-
-    $('htmlFrame').srcdoc = html;
-    showView('vHtml');
-    tlog(`Loaded: ${repoData.stargazers_count} stars, ${langs.join(', ')||'no langs'}`, 'ok');
-  } catch(err) {
-    setStatus('err', `GitHub API error: ${err.message}`);
-    tlog(err.message, 'err');
-    tlog('GitHub API rate-limits unauthenticated requests to 60/hr. Add a token in Headers tab.','warn');
-  }
+function switchPTab(n) {
+  document.querySelectorAll('.ptab').forEach((t,i) => t.classList.toggle('active', i===n));
+  ['pt0','pt1','pt2','pt3','pt4'].forEach((id,i) => {
+    const el = $(id);
+    if(el) el.style.display = i===n ? 'block' : 'none';
+  });
+  if(n === 2) renderWorkerPanel(); // re-render worker tab on open
 }
 
-// ── GitHub User Card via public API ──
-async function renderGitHubUser(owner, originalUrl) {
-  setStatus('loading', `Fetching GitHub user: ${owner}...`);
-  try {
-    const [userRes, reposRes] = await Promise.allSettled([
-      fetch(`https://api.github.com/users/${owner}`),
-      fetch(`https://api.github.com/users/${owner}/repos?sort=stars&per_page=6`)
-    ]);
-    const userData  = userRes.status==='fulfilled'  && userRes.value.ok  ? await userRes.value.json()  : null;
-    const reposData = reposRes.status==='fulfilled' && reposRes.value.ok ? await reposRes.value.json() : [];
-    if(!userData) throw new Error('User not found');
-
-    setStatus('ok', `GitHub user — ${owner}`);
-    setTags('github', false);
-
-    const repoCards = reposData.map(r=>`
-      <div style="background:#111820;border:1px solid #1c2a38;border-radius:5px;padding:10px;margin-bottom:8px">
-        <div><a href="${r.html_url}" target="_blank" style="color:#00d4ff;text-decoration:none;font-size:11px">${esc(r.name)}</a>
-          <span style="color:#6e7f8e;font-size:10px;margin-left:8px">⭐ ${r.stargazers_count}</span></div>
-        <div style="color:#8b949e;font-size:10px;margin-top:3px">${esc(r.description||'')}</div>
-      </div>`).join('');
-
-    const html = `<!DOCTYPE html><html><head><meta charset="utf-8">
-    <link href="https://fonts.googleapis.com/css2?family=Syne:wght@700&family=JetBrains+Mono&display=swap" rel="stylesheet">
-    <style>*{box-sizing:border-box;margin:0;padding:0}body{background:#07090d;color:#c9d1d9;font-family:'JetBrains Mono',monospace;font-size:12px;padding:24px;line-height:1.6}
-    .avatar{width:80px;height:80px;border-radius:50%;border:2px solid #1c2a38;margin-bottom:12px}
-    h1{font-family:'Syne',sans-serif;color:#e6edf3;font-size:20px}
-    .login{color:#00d4ff;font-size:12px;margin-bottom:8px}
-    .bio{color:#8b949e;font-size:11px;margin-bottom:12px}
-    .stats{display:flex;gap:16px;font-size:11px;color:#8b949e;margin-bottom:20px}
-    .stat b{color:#e6edf3}
-    .open-btn{display:inline-block;background:#00d4ff;color:#07090d;padding:7px 16px;border-radius:5px;text-decoration:none;font-size:11px;font-weight:600;margin-bottom:20px}
-    .section-title{font-size:9px;letter-spacing:.1em;color:#6e7f8e;text-transform:uppercase;margin-bottom:10px}
-    </style></head><body>
-    <img class="avatar" src="${userData.avatar_url}" alt="">
-    <h1>${esc(userData.name||owner)}</h1>
-    <div class="login">@${esc(userData.login)}</div>
-    <div class="bio">${esc(userData.bio||'')}</div>
-    <div class="stats">
-      <div class="stat">Repos <b>${userData.public_repos}</b></div>
-      <div class="stat">Followers <b>${userData.followers}</b></div>
-      <div class="stat">Following <b>${userData.following}</b></div>
-    </div>
-    <a class="open-btn" href="${userData.html_url}" target="_blank">Open on GitHub ↗</a>
-    ${repoCards.length?`<div class="section-title">Top Repositories</div>${repoCards}`:''}
-    </body></html>`;
-
-    $('htmlFrame').srcdoc = html;
-    showView('vHtml');
-    tlog(`Loaded: ${userData.public_repos} repos, ${userData.followers} followers`, 'ok');
-  } catch(err) {
-    setStatus('err', `GitHub API error: ${err.message}`);
-    tlog(err.message, 'err');
-  }
+function addHeaderRow(k, v) {
+  k = k || ''; v = v || '';
+  const id = Date.now() + Math.random();
+  headerRows.push({id, k, v});
+  const c = $('headerRows');
+  if(!c) return;
+  const row = document.createElement('div');
+  row.className = 'kv-row';
+  row.dataset.id = id;
+  row.innerHTML = '<input placeholder="Header" value="' + esc(k) + '" oninput="updHdr(this,\'k\')">'
+                + '<input placeholder="Value"  value="' + esc(v) + '" oninput="updHdr(this,\'v\')">'
+                + '<button class="kv-del" onclick="this.parentElement.remove()">✕</button>';
+  c.appendChild(row);
 }
 
-// ══════════════════════════════════════════════
-  const url = urlInput.value.trim();
-  if(!url){ tlog('URL required.','err'); return; }
-
-  showView('vTerminal');
-  setStatus('loading','Fetching...');
-  setTags(null,useProxy);
-  $('btnCopy').disabled = true;
-  $('btnDl').disabled   = true;
-  rawContent=''; rawType=''; rawBlob=null; rawMeta={};
-
-  PROXIES.forEach(p=>p.status='idle');
-  renderProxyList();
-
-  tlog((useProxy?'[PROXY] ':'[DIRECT] ')+'→ '+url, 'info');
-
-  // Smart embed detection — intercept walled-garden sites before any fetch
-  const embed = detectEmbed(url);
-  if(embed) {
-    if(embed.redirect) {
-      tlog(`Detected ${embed.label} — redirecting to raw URL`, 'info');
-      urlInput.value = embed.redirect;
-      await doLoad(useProxy);
-      return;
-    }
-    tlog(`Detected ${embed.label} — native embed used (proxies cannot bypass this site)`, 'warn');
-    renderEmbed(embed, url);
-    return;
-  }
-
-  if(useProxy) {
-    await proxyLoad(url);
-  } else {
-    await directLoad(url);
-  }
+function updHdr(el, field) {
+  const id = parseFloat(el.parentElement.dataset.id);
+  const r = headerRows.find(r => r.id === id);
+  if(r) r[field] = el.value;
 }
 
-// ── DIRECT ──
-async function directLoad(url) {
-  // Check for likely image
-  if(IMAGE_EXTS.test(url.split('?')[0])){
-    tlog('Detected image URL — loading directly.','');
-    rawType='image'; rawMeta={url};
-    await renderContent('image','',url);
-    return;
-  }
-  if(BINARY_EXTS.test(url.split('?')[0])){
-    tlog('Binary file detected — initiating download.','warn');
-    triggerDirectDownload(url);
-    return;
-  }
-  try {
-    const res = await fetch(url, { headers: buildHeaders() });
-    if(!res.ok) throw new Error(`HTTP ${res.status} ${res.statusText}`);
-    const ct = res.headers.get('content-type')||'';
-    tlog(`${res.status} OK | ${ct||'no content-type'}`,'ok');
-    const body = await res.text();
-    const type = detectType(url, ct, body);
-    rawContent=body; rawType=type;
-    rawMeta={url, ct, size:body.length, method:'direct'};
-    updateInfo();
-    addHist(url,type);
-    await renderContent(type,body,url);
-  } catch(err) {
-    setStatus('err',err.message);
-    tlog(err.message,'err');
-    tlog('CORS blocked? Try ⬡ Proxy mode.','warn');
-  }
+function addCookieKV() {}
+function renderProxyList() {}
+function handleFileInput() {}
+function dzOver(e) { e.preventDefault(); }
+function dzLeave() {}
+function dzDrop(e) { e.preventDefault(); }
+function clearCookies() { const el=$('cookieInput'); if(el) el.value=''; }
+function parseCookieKV() {}
+function addCustomProxy() {}
+
+function copyContent() {
+  if(!rawBlob) return;
+  rawBlob.text().then(t => navigator.clipboard.writeText(t));
 }
 
-// ── PROXY FALLBACK CHAIN ──
-async function proxyLoad(url) {
-  const extraHeaders = buildHeaders();
-  const cookieStr = buildCookieHeader();
-
-  for(let i=0; i<PROXIES.length; i++){
-    const p = PROXIES[i];
-    setProxyStatus(i,'trying');
-    tlog(`Trying proxy [${i+1}/${PROXIES.length}]: ${p.name}...`,'');
-    try {
-      const result = await tryProxy(p, url, extraHeaders, cookieStr);
-      setProxyStatus(i,'ok');
-      const {body, ct} = result;
-      const type = detectType(url, ct, body);
-      tlog(`✓ ${p.name} succeeded | type: ${type}`, 'ok');
-      rawContent=body; rawType=type;
-      rawMeta={url, ct, size:body.length, proxy:p.name};
-      updateInfo();
-      addHist(url,type);
-      await renderContent(type,body,url,true);
-      return;
-    } catch(err) {
-      setProxyStatus(i,'fail');
-      tlog(`✗ ${p.name} failed: ${err.message}`, 'warn');
-    }
-  }
-  setStatus('err','All proxies failed');
-  tlog('All proxies exhausted. Try a custom proxy in the Proxies panel.','err');
-}
-
-async function tryProxy(p, url, extraHeaders={}, cookieStr='') {
-  // Build final headers
-  const headers = {};
-  Object.assign(headers, extraHeaders);
-  if(cookieStr) headers['Cookie']=cookieStr;
-
-  // allorigins has special JSON wrapper
-  if(p.parser==='allorigins'){
-    const res = await fetchWithTimeout(`${p.url}${encodeURIComponent(url)}`, {headers}, 8000);
-    if(!res.ok) throw new Error(`HTTP ${res.status}`);
-    const json = await res.json();
-    return { body: json.contents||'', ct: json.content_type||'' };
-  }
-
-  // Raw proxy: just prepend URL
-  const res = await fetchWithTimeout(`${p.url}${encodeURIComponent(url)}`, {headers}, 8000);
-  if(!res.ok) throw new Error(`HTTP ${res.status}`);
-  const ct = res.headers.get('content-type')||'';
-  const body = await res.text();
-  return { body, ct };
-}
-
-function fetchWithTimeout(url, opts, ms) {
-  // NOTE: Do NOT use AbortController here — passing signal through fetch opts
-  // causes "AbortSignal object could not be cloned" in sandboxed/iframe contexts.
-  // Instead race the fetch against a rejection timer.
-  const timeout = new Promise((_,reject) =>
-    setTimeout(() => reject(new Error(`Timeout after ${ms}ms`)), ms)
-  );
-  return Promise.race([ fetch(url, opts), timeout ]);
-}
-
-function triggerDirectDownload(url) {
+function downloadContent() {
+  if(!rawBlob) return;
   const a = document.createElement('a');
-  a.href=url; a.download=url.split('/').pop().split('?')[0]||'download';
+  a.href = URL.createObjectURL(rawBlob);
+  a.download = urlInput.value.split('/').pop().split('?')[0] || 'nexus-download';
   a.click();
-  tlog('Download triggered.','ok');
-  setStatus('ok','Binary download triggered');
 }
 
-// ══════════════════════════════════════════════
-//  RENDER
-// ══════════════════════════════════════════════
-async function renderContent(type, body, url, isProxy=false) {
-  setTags(type, isProxy);
-  const canCopy = !['image','binary'].includes(type);
-  $('btnCopy').disabled = !canCopy;
-  $('btnDl').disabled   = false;
-
-  const size = body ? fmtSize(body.length) : '';
-  setStatus('ok', `Loaded — ${type.toUpperCase()}${size?' · '+size:''}`);
-
-  switch(type){
-    case 'json':       renderJSON(body);          break;
-    case 'html':       renderHTML(body);           break;
-    case 'image':      renderImage(body, url);     break;
-    case 'markdown':   renderMarkdown(body);       break;
-    case 'binary':     renderBinary(url, body);    break;
-    default:           renderCode(body, type);     break;
-  }
+function fmtSize(n) {
+  if(n < 1024) return n + 'B';
+  if(n < 1048576) return (n/1024).toFixed(1) + 'KB';
+  return (n/1048576).toFixed(2) + 'MB';
 }
 
-// Code
-function renderCode(body, lang) {
-  const block = $('codeBlock');
-  block.textContent = body;
-  block.className = `language-${ lang==='text'?'plaintext':lang }`;
-  hljs.highlightElement(block);
-  showView('vCode');
-}
-
-// JSON
-function renderJSON(body) {
-  try {
-    const parsed = JSON.parse(body);
-    const tree = $('jsonTree'); tree.innerHTML='';
-    tree.appendChild(buildJNode(parsed,null));
-    showView('vJson');
-  } catch {
-    tlog('JSON parse error — showing as plain text','warn');
-    renderCode(body,'json');
-  }
-}
-function buildJNode(val,key) {
-  const w = document.createElement('div');
-  const kh = key!==null ? `<span class="jk">"${esc(key)}"</span><span class="jbr">: </span>` : '';
-  if(val===null){ w.innerHTML=`${kh}<span class="jz">null</span>`; }
-  else if(typeof val==='boolean'){ w.innerHTML=`${kh}<span class="jb">${val}</span>`; }
-  else if(typeof val==='number'){  w.innerHTML=`${kh}<span class="jn">${val}</span>`; }
-  else if(typeof val==='string'){  w.innerHTML=`${kh}<span class="js_">"${esc(val)}"</span>`; }
-  else if(Array.isArray(val)){
-    const [open,close,count] = ['[',']',val.length+' items'];
-    buildCollapsible(w,kh,open,close,count, val.map((_,i)=>buildJNode(val[i],null)));
-  } else {
-    const keys=Object.keys(val);
-    buildCollapsible(w,kh,'{','}',keys.length+' keys', keys.map(k=>buildJNode(val[k],k)));
-  }
-  return w;
-}
-function buildCollapsible(w,kh,open,close,label,children){
-  const ch = document.createElement('div'); ch.className='ji jch';
-  children.forEach(c=>ch.appendChild(c));
-  const hd = document.createElement('div'); hd.className='jcol';
-  hd.innerHTML=`${kh}<span class="jtog">▾</span><span class="jbr">${open}</span> <span style="color:var(--text-d);font-size:10px">${label}</span>`;
-  hd.addEventListener('click',()=>{ const c=w.classList.toggle('jcollapsed'); hd.querySelector('.jtog').textContent=c?'▸':'▾'; });
-  const ft = document.createElement('div'); ft.innerHTML=`<span class="jbr">${close}</span>`;
-  w.appendChild(hd); w.appendChild(ch); w.appendChild(ft);
-}
-
-// HTML
-function renderHTML(body) {
-  $('htmlFrame').srcdoc = body;
-  showView('vHtml');
-}
-
-// Image
-function renderImage(body, url) {
-  const img = $('imgEl');
-  if(rawBlob) img.src = URL.createObjectURL(rawBlob);
-  else if(isBase64(body)) img.src = 'data:image/png;base64,'+body;
-  else img.src = url || urlInput.value.trim();
-  showView('vImage');
-}
-
-// Markdown
-function renderMarkdown(body) {
-  $('vMarkdown').innerHTML = marked.parse(body);
-  showView('vMarkdown');
-}
-
-// Binary
-function renderBinary(url, body) {
-  const name = url.split('/').pop().split('?')[0]||'file';
-  const ext  = name.split('.').pop().toUpperCase();
-  $('binName').textContent = name;
-  $('binSize').textContent = body ? fmtSize(body.length) : '';
-  $('binType').textContent = ext;
-  showView('vBinary');
-  $('btnDl').disabled = false;
-}
-
-// ══════════════════════════════════════════════
-//  ACTIONS
-// ══════════════════════════════════════════════
-async function copyContent(){
-  let text = rawContent;
-  if(incognitoOn && encryptedStore) {
-    try { text = await decryptContent(); } catch { tlog('Copy failed: decryption error','err'); return; }
-  }
-  if(!text) return;
-  navigator.clipboard.writeText(text).then(()=>{
-    const b=$('btnCopy'), orig=b.textContent;
-    b.textContent='✓ Copied'; setTimeout(()=>b.textContent=orig,1200);
-  });
-}
-
-async function downloadContent(){
-  const url = urlInput.value.trim();
-  const name = url.split('/').pop().split('?')[0]||'nexus-download';
-  if(rawBlob){ dlBlob(rawBlob,name); return; }
-  let text = rawContent;
-  if(incognitoOn && encryptedStore) {
-    try { text = await decryptContent(); } catch { tlog('Download failed: decryption error','err'); return; }
-  }
-  if(!text){ triggerDirectDownload(url); return; }
-  dlBlob(new Blob([text],{type:'text/plain'}), name);
-}
-
-function dlBlob(blob, name){
-  const a=document.createElement('a');
-  a.href=URL.createObjectURL(blob); a.download=name; a.click();
-}
-
-// ══════════════════════════════════════════════
-//  HISTORY
-// ══════════════════════════════════════════════
-function addHist(url,type){
-  if(history.length && history[history.length-1].url===url) return;
-  history.push({url,type}); activeHist=history.length-1; renderHist();
-}
-const TYPE_ICONS = {json:'{}',javascript:'JS',css:'CSS',html:'H',image:'⬡',markdown:'MD',xml:'XML',text:'≡',binary:'⬟',embed:'▶'};
-function renderHist(){
-  const c=$('histBar'); c.innerHTML='';
-  history.forEach((item,i)=>{
-    const t=document.createElement('div');
-    t.className='htab'+(i===activeHist?' active':'');
-    const label=item.url.split('/').pop().split('?')[0]||item.url;
-    t.innerHTML=`<span class="htab-ico">${TYPE_ICONS[item.type]||'?'}</span><span style="overflow:hidden;text-overflow:ellipsis">${esc(label)}</span><span class="htab-x">✕</span>`;
-    t.addEventListener('click',e=>{
-      if(e.target.classList.contains('htab-x')){ history.splice(i,1); if(activeHist>=history.length) activeHist=history.length-1; renderHist(); return; }
-      urlInput.value=item.url; activeHist=i; renderHist();
-    });
-    c.appendChild(t);
-  });
-}
-
-// ══════════════════════════════════════════════
-//  INFO PANEL UPDATE
-// ══════════════════════════════════════════════
-function updateInfo(){
-  const m=rawMeta;
-  $('infoBox').innerHTML=`
-    <b>URL</b> ${esc(m.url||'-')}<br>
-    <b>Type</b> ${esc(m.ct||'-')}<br>
-    <b>Detected</b> ${esc(rawType||'-')}<br>
-    <b>Size</b> ${m.size?fmtSize(m.size):'-'}<br>
-    <b>Via</b> ${esc(m.proxy||m.method||'-')}
-  `;
-}
-
-// ══════════════════════════════════════════════
-//  UTILS
-// ══════════════════════════════════════════════
-// ══════════════════════════════════════════════
-//  INCOGNITO / AES-GCM ENGINE
-// ══════════════════════════════════════════════
-let incognitoOn  = false;
-let sessionKey   = null;   // CryptoKey — lives only in this JS heap
-let encryptedStore = null; // { iv: Uint8Array, data: ArrayBuffer }
-
-async function toggleIncognito() {
-  incognitoOn = !incognitoOn;
-  if(incognitoOn) {
-    await generateSessionKey();
-  } else {
-    purgeSession(true); // silent purge — just wipes key+store, doesn't toggle again
-  }
-  updateIncogUI();
-}
-
-async function generateSessionKey() {
-  sessionKey = await crypto.subtle.generateKey(
-    { name:'AES-GCM', length:256 },
-    true,   // extractable = true so we can show the key fingerprint
-    ['encrypt','decrypt']
-  );
-  // Show fingerprint (first 8 bytes of raw key export as hex) — not the full key
-  const raw = await crypto.subtle.exportKey('raw', sessionKey);
-  const hex = Array.from(new Uint8Array(raw).slice(0,8)).map(b=>b.toString(16).padStart(2,'0')).join('');
-  $('keyDisplay').textContent = `Session key fingerprint: ${hex}... (256-bit, AES-GCM)`;
-  tlog('Incognito ON — AES-256-GCM session key generated.', 'info');
-}
-
-function purgeSession(silent=false) {
-  sessionKey     = null;
-  encryptedStore = null;
-  rawContent     = '';
-  $('keyDisplay').textContent = 'No key — incognito off';
-  if(!silent) {
-    incognitoOn = false;
-    updateIncogUI();
-    tlog('Incognito session purged. Key and content wiped.', 'warn');
-  }
-}
-
-function updateIncogUI() {
-  const on = incognitoOn;
-  const tog    = $('incogToggle');
-  const knob   = $('incogKnob');
-  const label  = $('incogLabel');
-  const status = $('incogStatus');
-  const topbar = $('topbar');
-
-  tog.style.background   = on ? 'var(--green)' : 'var(--border2)';
-  tog.style.borderColor  = on ? 'var(--green)'  : 'var(--border)';
-  knob.style.left        = on ? '18px' : '2px';
-  knob.style.background  = on ? '#fff' : 'var(--text-d)';
-  label.textContent      = on ? 'ON — AES-256-GCM active' : 'Off — plaintext mode';
-  label.style.color      = on ? 'var(--green)' : 'var(--text-d)';
-
-  status.innerHTML = on
-    ? `Incognito mode is <b style="color:var(--green)">active</b>.<br>Content encrypted in memory. Key purged on tab close.`
-    : `Incognito mode is <b style="color:var(--text-d)">off</b>.<br>Content stored as plaintext in memory.`;
-
-  // Topbar glow when active
-  topbar.style.boxShadow = on ? 'inset 0 -1px 0 var(--green), 0 0 20px rgba(35,209,139,.07)' : '';
-
-  // Add/remove incognito indicator tag in statusbar
-  let itag = $('incogTag');
-  if(on && !itag) {
-    itag = document.createElement('div');
-    itag.id = 'incogTag';
-    itag.className = 'ttag';
-    itag.style.cssText = 'background:rgba(35,209,139,.1);color:var(--green);border-color:rgba(35,209,139,.25)';
-    itag.textContent = '🔒 INCOGNITO';
-    $('statusbar').insertBefore(itag, $('sbar-actions') || $('ptag').nextSibling);
-  } else if(!on && itag) {
-    itag.remove();
-  }
-
-  $('btnRotate').disabled = !on;
-  $('btnPurge').disabled  = !on;
-}
-
-async function rotateKey() {
-  if(!incognitoOn) return;
-  // If we have encrypted content, decrypt with old key first, re-encrypt with new
-  let plaintext = null;
-  if(encryptedStore) {
-    try { plaintext = await decryptContent(); } catch {}
-  }
-  await generateSessionKey();
-  if(plaintext !== null) {
-    await encryptContent(plaintext);
-    tlog('Key rotated. Content re-encrypted with new key.', 'info');
-  } else {
-    tlog('Key rotated. No content to re-encrypt.', 'info');
-  }
-}
-
-// Encrypt a string → stores result in encryptedStore, zeros rawContent
-async function encryptContent(text) {
-  if(!sessionKey || !incognitoOn) return;
-  const iv  = crypto.getRandomValues(new Uint8Array(12));
-  const enc = new TextEncoder().encode(text);
-  const ct  = await crypto.subtle.encrypt({ name:'AES-GCM', iv }, sessionKey, enc);
-  encryptedStore = { iv, data: ct };
-  rawContent = ''; // zero plaintext from memory
-  tlog(`Content encrypted (${fmtSize(ct.byteLength)} ciphertext).`, 'ok');
-}
-
-// Decrypt encryptedStore → returns plaintext string (briefly)
-async function decryptContent() {
-  if(!sessionKey || !encryptedStore) throw new Error('No encrypted content or key');
-  const pt = await crypto.subtle.decrypt(
-    { name:'AES-GCM', iv: encryptedStore.iv }, sessionKey, encryptedStore.data
-  );
-  return new TextDecoder().decode(pt);
-}
-
-// Wipe session key on tab unload
-window.addEventListener('beforeunload', () => {
-  if(incognitoOn) purgeSession(true);
-});
-
-// ── Wrap the main load pipeline to encrypt/decrypt around render ──
-// Monkey-patch: save original renderContent, replace with incognito-aware version
-const _renderContent = renderContent;
-async function renderContent(type, body, url, isProxy=false) {
-  if(incognitoOn && body && typeof body === 'string') {
-    // Encrypt immediately, before storing in rawContent
-    await encryptContent(body);
-    // Decrypt briefly just for rendering
-    const plaintext = await decryptContent();
-    await _renderContent(type, plaintext, url, isProxy);
-    // plaintext GC'd as soon as this stack frame ends
-  } else {
-    await _renderContent(type, body, url, isProxy);
-  }
-}
-
-function fmtSize(n){
-  if(n<1024) return n+'B';
-  if(n<1048576) return (n/1024).toFixed(1)+'KB';
-  return (n/1048576).toFixed(2)+'MB';
+function esc(s) {
+  return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
 </body>
 </html>
-
