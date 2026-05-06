@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -33,72 +34,72 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 
 /* ══ TOPBAR ══ */
 #topbar{
-  background:var(--s1);
-  border-bottom:1px solid var(--border);
-  padding:8px 12px;
-  display:flex;flex-direction:column;gap:7px;
-  flex-shrink:0;
+background:var(–s1);
+border-bottom:1px solid var(–border);
+padding:8px 12px;
+display:flex;flex-direction:column;gap:7px;
+flex-shrink:0;
 }
 .topbar-row1{display:flex;align-items:center;gap:9px}
-.logo{font-family:'Syne',sans-serif;font-weight:800;font-size:14px;color:var(--accent);letter-spacing:.12em;white-space:nowrap;user-select:none}
-.logo em{color:var(--text-d);font-style:normal;font-weight:400;font-size:10px;letter-spacing:.05em}
+.logo{font-family:‘Syne’,sans-serif;font-weight:800;font-size:14px;color:var(–accent);letter-spacing:.12em;white-space:nowrap;user-select:none}
+.logo em{color:var(–text-d);font-style:normal;font-weight:400;font-size:10px;letter-spacing:.05em}
 #urlInput{
-  flex:1;background:var(--bg);border:1px solid var(--border);
-  color:var(--text-b);padding:7px 11px;border-radius:5px;
-  font-family:'JetBrains Mono',monospace;font-size:12px;outline:none;
-  transition:border-color .15s,box-shadow .15s;
+flex:1;background:var(–bg);border:1px solid var(–border);
+color:var(–text-b);padding:7px 11px;border-radius:5px;
+font-family:‘JetBrains Mono’,monospace;font-size:12px;outline:none;
+transition:border-color .15s,box-shadow .15s;
 }
-#urlInput:focus{border-color:var(--accent);box-shadow:0 0 0 2px rgba(0,212,255,.07)}
-#urlInput::placeholder{color:var(--text-d)}
+#urlInput:focus{border-color:var(–accent);box-shadow:0 0 0 2px rgba(0,212,255,.07)}
+#urlInput::placeholder{color:var(–text-d)}
 .btn-group{display:flex;gap:5px;flex-shrink:0}
 .btn{
-  background:var(--s2);color:var(--text);border:1px solid var(--border2);
-  padding:6px 13px;cursor:pointer;border-radius:5px;
-  font-family:'JetBrains Mono',monospace;font-size:11px;
-  transition:all .13s;white-space:nowrap;
+background:var(–s2);color:var(–text);border:1px solid var(–border2);
+padding:6px 13px;cursor:pointer;border-radius:5px;
+font-family:‘JetBrains Mono’,monospace;font-size:11px;
+transition:all .13s;white-space:nowrap;
 }
-.btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
-.btn.go{border-color:var(--accent);color:var(--accent)}
-.btn.proxy{border-color:var(--purple);color:var(--purple)}
+.btn:hover{border-color:var(–accent);color:var(–accent);background:rgba(0,212,255,.05)}
+.btn.go{border-color:var(–accent);color:var(–accent)}
+.btn.proxy{border-color:var(–purple);color:var(–purple)}
 .btn.proxy:hover{background:rgba(180,142,173,.07)}
 .btn.sm{padding:4px 9px;font-size:10px}
-.btn.active-toggle{background:rgba(0,212,255,.1);border-color:var(--accent);color:var(--accent)}
+.btn.active-toggle{background:rgba(0,212,255,.1);border-color:var(–accent);color:var(–accent)}
 .btn:disabled{opacity:.3;cursor:default;pointer-events:none}
-.btn.danger:hover{border-color:var(--red);color:var(--red)}
+.btn.danger:hover{border-color:var(–red);color:var(–red)}
 
 /* ══ HISTORY TABS ══ */
 #histBar{display:flex;gap:4px;overflow-x:auto;scrollbar-width:none;min-height:22px;align-items:center}
 #histBar::-webkit-scrollbar{display:none}
 .htab{
-  background:var(--bg);border:1px solid var(--border);color:var(--text-d);
-  padding:2px 9px;border-radius:3px;font-size:10px;cursor:pointer;white-space:nowrap;
-  max-width:200px;overflow:hidden;text-overflow:ellipsis;transition:all .1s;
-  display:flex;align-items:center;gap:5px;
+background:var(–bg);border:1px solid var(–border);color:var(–text-d);
+padding:2px 9px;border-radius:3px;font-size:10px;cursor:pointer;white-space:nowrap;
+max-width:200px;overflow:hidden;text-overflow:ellipsis;transition:all .1s;
+display:flex;align-items:center;gap:5px;
 }
-.htab:hover{border-color:var(--accent);color:var(--accent)}
-.htab.active{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.07)}
+.htab:hover{border-color:var(–accent);color:var(–accent)}
+.htab.active{border-color:var(–accent);color:var(–accent);background:rgba(0,212,255,.07)}
 .htab-x{opacity:.4;font-size:9px;flex-shrink:0}
-.htab-x:hover{opacity:1;color:var(--red)}
+.htab-x:hover{opacity:1;color:var(–red)}
 .htab-ico{opacity:.45;font-size:9px;flex-shrink:0}
 
 /* ══ STATUSBAR ══ */
 #statusbar{
-  background:var(--s2);border-bottom:1px solid var(--border);
-  padding:3px 12px;display:flex;align-items:center;gap:10px;
-  font-size:10px;color:var(--text-d);flex-shrink:0;
+background:var(–s2);border-bottom:1px solid var(–border);
+padding:3px 12px;display:flex;align-items:center;gap:10px;
+font-size:10px;color:var(–text-d);flex-shrink:0;
 }
-.sdot{width:6px;height:6px;border-radius:50%;background:var(--text-d);flex-shrink:0;transition:background .2s}
-.sdot.ok{background:var(--green);box-shadow:0 0 6px var(--green)}
-.sdot.err{background:var(--red)}
-.sdot.loading{background:var(--yellow);animation:blink .7s infinite}
+.sdot{width:6px;height:6px;border-radius:50%;background:var(–text-d);flex-shrink:0;transition:background .2s}
+.sdot.ok{background:var(–green);box-shadow:0 0 6px var(–green)}
+.sdot.err{background:var(–red)}
+.sdot.loading{background:var(–yellow);animation:blink .7s infinite}
 @keyframes blink{0%,100%{opacity:1}50%{opacity:.25}}
 #stext{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .ttag{
-  background:rgba(0,212,255,.08);color:var(--accent);
-  border:1px solid rgba(0,212,255,.18);padding:1px 7px;border-radius:3px;
-  font-size:9px;letter-spacing:.06em;white-space:nowrap;
+background:rgba(0,212,255,.08);color:var(–accent);
+border:1px solid rgba(0,212,255,.18);padding:1px 7px;border-radius:3px;
+font-size:9px;letter-spacing:.06em;white-space:nowrap;
 }
-.proxy-tag{background:rgba(180,142,173,.08);color:var(--purple);border-color:rgba(180,142,173,.2)}
+.proxy-tag{background:rgba(180,142,173,.08);color:var(–purple);border-color:rgba(180,142,173,.2)}
 .sbar-actions{display:flex;gap:4px;margin-left:auto;flex-shrink:0}
 
 /* ══ MAIN LAYOUT ══ */
@@ -106,58 +107,72 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 
 /* ══ SIDE PANEL ══ */
 #sidePanel{
-  width:var(--panel-w);flex-shrink:0;
-  background:var(--s1);border-right:1px solid var(--border);
-  display:flex;flex-direction:column;overflow:hidden;
-  transition:width .2s;
+width:var(–panel-w);flex-shrink:0;
+background:var(–s1);border-right:1px solid var(–border);
+display:flex;flex-direction:column;overflow:hidden;
+transition:width .2s;
 }
 #sidePanel.collapsed{width:0;border-right:none}
-.panel-tab-bar{display:flex;border-bottom:1px solid var(--border);flex-shrink:0}
+.panel-tab-bar{display:flex;border-bottom:1px solid var(–border);flex-shrink:0}
 .ptab{
-  flex:1;padding:7px 4px;text-align:center;font-size:10px;cursor:pointer;
-  color:var(--text-d);border-bottom:2px solid transparent;transition:all .13s;
+flex:1;padding:7px 4px;text-align:center;font-size:10px;cursor:pointer;
+color:var(–text-d);border-bottom:2px solid transparent;transition:all .13s;
 }
-.ptab:hover{color:var(--text)}
-.ptab.active{color:var(--accent);border-color:var(--accent)}
-.panel-body{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.ptab:hover{color:var(–text)}
+.ptab.active{color:var(–accent);border-color:var(–accent)}
+.panel-body{flex:1;overflow-y:auto;padding:10px;scrollbar-width:thin;scrollbar-color:var(–border) transparent}
 .panel-body::-webkit-scrollbar{width:4px}
 .panel-body::-webkit-scrollbar-track{background:transparent}
-.panel-body::-webkit-scrollbar-thumb{background:var(--border)}
+.panel-body::-webkit-scrollbar-thumb{background:var(–border)}
 .panel-section{margin-bottom:14px}
-.panel-label{font-size:9px;letter-spacing:.1em;color:var(--text-d);margin-bottom:6px;text-transform:uppercase}
+.panel-label{font-size:9px;letter-spacing:.1em;color:var(–text-d);margin-bottom:6px;text-transform:uppercase}
 .kv-row{display:flex;gap:5px;margin-bottom:5px;align-items:center}
 .kv-row input{
-  flex:1;background:var(--bg);border:1px solid var(--border);color:var(--text);
-  padding:4px 7px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:10px;outline:none;
+flex:1;background:var(–bg);border:1px solid var(–border);color:var(–text);
+padding:4px 7px;border-radius:4px;font-family:‘JetBrains Mono’,monospace;font-size:10px;outline:none;
 }
-.kv-row input:focus{border-color:var(--accent)}
-.kv-row input::placeholder{color:var(--text-d)}
-.kv-del{background:none;border:none;color:var(--text-d);cursor:pointer;padding:2px 5px;font-size:11px}
-.kv-del:hover{color:var(--red)}
+.kv-row input:focus{border-color:var(–accent)}
+.kv-row input::placeholder{color:var(–text-d)}
+.kv-del{background:none;border:none;color:var(–text-d);cursor:pointer;padding:2px 5px;font-size:11px}
+.kv-del:hover{color:var(–red)}
 .proxy-list{display:flex;flex-direction:column;gap:4px}
 .proxy-item{
-  display:flex;align-items:center;gap:6px;padding:5px 7px;
-  border:1px solid var(--border);border-radius:4px;background:var(--bg);
-  font-size:10px;cursor:pointer;transition:all .12s;
+display:flex;align-items:center;gap:6px;padding:5px 7px;
+border:1px solid var(–border);border-radius:4px;background:var(–bg);
+font-size:10px;cursor:pointer;transition:all .12s;
 }
-.proxy-item:hover{border-color:var(--border2)}
-.proxy-item.active{border-color:var(--green);color:var(--green)}
-.proxy-item.failed{border-color:var(--red);color:var(--red);opacity:.5}
-.proxy-item.trying{border-color:var(--yellow);color:var(--yellow)}
-.proxy-dot{width:5px;height:5px;border-radius:50%;background:var(--text-d);flex-shrink:0}
-.proxy-item.active .proxy-dot{background:var(--green)}
-.proxy-item.failed .proxy-dot{background:var(--red)}
-.proxy-item.trying .proxy-dot{background:var(--yellow);animation:blink .5s infinite}
+.proxy-item:hover{border-color:var(–border2)}
+.proxy-item.active{border-color:var(–green);color:var(–green)}
+.proxy-item.failed{border-color:var(–red);color:var(–red);opacity:.5}
+.proxy-item.trying{border-color:var(–yellow);color:var(–yellow)}
+.proxy-dot{width:5px;height:5px;border-radius:50%;background:var(–text-d);flex-shrink:0}
+.proxy-item.active .proxy-dot{background:var(–green)}
+.proxy-item.failed .proxy-dot{background:var(–red)}
+.proxy-item.trying .proxy-dot{background:var(–yellow);animation:blink .5s infinite}
 .proxy-name{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.proxy-badge{font-size:9px;color:var(--text-d);flex-shrink:0}
+.proxy-badge{font-size:9px;color:var(–text-d);flex-shrink:0}
 .cookie-area{
-  background:var(--bg);border:1px solid var(--border);border-radius:4px;
-  padding:6px;font-size:10px;color:var(--text-d);width:100%;resize:vertical;
-  min-height:80px;font-family:'JetBrains Mono',monospace;outline:none;
+background:var(–bg);border:1px solid var(–border);border-radius:4px;
+padding:6px;font-size:10px;color:var(–text-d);width:100%;resize:vertical;
+min-height:80px;font-family:‘JetBrains Mono’,monospace;outline:none;
 }
-.cookie-area:focus{border-color:var(--accent)}
-.info-box{background:var(--s2);border:1px solid var(--border);border-radius:4px;padding:8px;font-size:10px;line-height:1.6;color:var(--text-d)}
-.info-box b{color:var(--yellow)}
+.cookie-area:focus{border-color:var(–accent)}
+.info-box{background:var(–s2);border:1px solid var(–border);border-radius:4px;padding:8px;font-size:10px;line-height:1.6;color:var(–text-d)}
+.info-box b{color:var(–yellow)}
+
+/* ══ TOAST ══ */
+#nexusToast{
+position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(20px);
+background:var(–s1);border:1px solid var(–border);border-radius:8px;
+padding:10px 18px;font-size:11px;color:var(–text);z-index:9999;
+display:flex;align-items:center;gap:10px;opacity:0;
+transition:opacity .3s,transform .3s;pointer-events:none;
+box-shadow:0 4px 24px rgba(0,0,0,.5);white-space:nowrap;
+}
+#nexusToast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+#nexusToast .t-icon{font-size:14px;flex-shrink:0}
+#nexusToast .t-msg{flex:1}
+#nexusToast .t-sub{font-size:9px;color:var(–text-d);margin-top:1px}
 
 /* ══ CONTENT ══ */
 #content{flex:1;display:flex;flex-direction:column;overflow:hidden;position:relative}
@@ -165,28 +180,28 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 .view.active{display:flex;flex-direction:column}
 
 /* Terminal */
-#vTerminal{padding:14px;overflow-y:auto;font-size:11px;line-height:1.75;color:var(--text-d);scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#vTerminal{padding:14px;overflow-y:auto;font-size:11px;line-height:1.75;color:var(–text-d);scrollbar-width:thin;scrollbar-color:var(–border) transparent}
 .ll{display:flex;gap:8px}
 .ll .ts{color:#1e3040;flex-shrink:0;user-select:none;font-size:10px;margin-top:1px}
-.ll.ok .msg{color:var(--green)}
-.ll.err .msg{color:var(--red)}
-.ll.info .msg{color:var(--accent)}
-.ll.warn .msg{color:var(--yellow)}
-.ll.sub .msg{color:var(--text-d);padding-left:12px}
+.ll.ok .msg{color:var(–green)}
+.ll.err .msg{color:var(–red)}
+.ll.info .msg{color:var(–accent)}
+.ll.warn .msg{color:var(–yellow)}
+.ll.sub .msg{color:var(–text-d);padding-left:12px}
 
 /* Code */
-#vCode{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent;background:#0d1117}
-#vCode pre{margin:0;padding:14px;font-family:'JetBrains Mono',monospace;font-size:11.5px;line-height:1.65}
+#vCode{overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(–border) transparent;background:#0d1117}
+#vCode pre{margin:0;padding:14px;font-family:‘JetBrains Mono’,monospace;font-size:11.5px;line-height:1.65}
 #vCode code{background:none!important}
 
 /* JSON */
-#vJson{overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+#vJson{overflow-y:auto;padding:12px;scrollbar-width:thin;scrollbar-color:var(–border) transparent}
 .jt{font-size:11.5px;line-height:1.85}
-.jk{color:#79b8ff}.js_{color:#9ecbff}.jn{color:#f8c555}.jb{color:#ff7b72}.jz{color:var(--text-d);font-style:italic}.jbr{color:var(--text-d)}
+.jk{color:#79b8ff}.js_{color:#9ecbff}.jn{color:#f8c555}.jb{color:#ff7b72}.jz{color:var(–text-d);font-style:italic}.jbr{color:var(–text-d)}
 .ji{padding-left:18px}
-.jcol{cursor:pointer;user-select:none}.jcol:hover .jbr{color:var(--accent)}
+.jcol{cursor:pointer;user-select:none}.jcol:hover .jbr{color:var(–accent)}
 .jcollapsed .jch{display:none}
-.jtog{color:var(--text-d);font-size:9px;margin-right:3px;display:inline-block;width:8px}
+.jtog{color:var(–text-d);font-size:9px;margin-right:3px;display:inline-block;width:8px}
 
 /* HTML */
 #vHtml{flex:1}
@@ -197,118 +212,120 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 #vImage img{max-width:96%;max-height:96%;object-fit:contain;box-shadow:0 8px 60px rgba(0,0,0,.7)}
 
 /* Markdown */
-#vMarkdown{overflow-y:auto;padding:30px 36px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;max-width:800px;margin:0 auto;width:100%}
-#vMarkdown h1,#vMarkdown h2,#vMarkdown h3{font-family:'Syne',sans-serif;color:var(--text-b);margin:1.4em 0 .4em}
-#vMarkdown h1{font-size:22px;border-bottom:1px solid var(--border);padding-bottom:8px}
+#vMarkdown{overflow-y:auto;padding:30px 36px;scrollbar-width:thin;scrollbar-color:var(–border) transparent;max-width:800px;margin:0 auto;width:100%}
+#vMarkdown h1,#vMarkdown h2,#vMarkdown h3{font-family:‘Syne’,sans-serif;color:var(–text-b);margin:1.4em 0 .4em}
+#vMarkdown h1{font-size:22px;border-bottom:1px solid var(–border);padding-bottom:8px}
 #vMarkdown h2{font-size:17px}
-#vMarkdown h3{font-size:14px;color:var(--accent)}
-#vMarkdown p{line-height:1.75;margin:.6em 0;color:var(--text)}
-#vMarkdown code{background:var(--s3);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(--accent)}
-#vMarkdown pre{background:var(--s2);border:1px solid var(--border);border-radius:5px;padding:12px;margin:.8em 0;overflow-x:auto}
-#vMarkdown pre code{background:none;color:var(--text)}
-#vMarkdown a{color:var(--accent);text-decoration:none}
+#vMarkdown h3{font-size:14px;color:var(–accent)}
+#vMarkdown p{line-height:1.75;margin:.6em 0;color:var(–text)}
+#vMarkdown code{background:var(–s3);padding:1px 5px;border-radius:3px;font-size:10.5px;color:var(–accent)}
+#vMarkdown pre{background:var(–s2);border:1px solid var(–border);border-radius:5px;padding:12px;margin:.8em 0;overflow-x:auto}
+#vMarkdown pre code{background:none;color:var(–text)}
+#vMarkdown a{color:var(–accent);text-decoration:none}
 #vMarkdown a:hover{text-decoration:underline}
-#vMarkdown blockquote{border-left:3px solid var(--purple);padding-left:12px;color:var(--text-d);margin:.8em 0}
+#vMarkdown blockquote{border-left:3px solid var(–purple);padding-left:12px;color:var(–text-d);margin:.8em 0}
 #vMarkdown table{border-collapse:collapse;width:100%;margin:.8em 0;font-size:11px}
-#vMarkdown th,#vMarkdown td{border:1px solid var(--border);padding:5px 10px}
-#vMarkdown th{background:var(--s2);color:var(--accent)}
+#vMarkdown th,#vMarkdown td{border:1px solid var(–border);padding:5px 10px}
+#vMarkdown th{background:var(–s2);color:var(–accent)}
 #vMarkdown ul,#vMarkdown ol{padding-left:20px}
 #vMarkdown li{margin:3px 0}
-#vMarkdown hr{border:none;border-top:1px solid var(--border);margin:1.2em 0}
+#vMarkdown hr{border:none;border-top:1px solid var(–border);margin:1.2em 0}
 
 /* Binary */
-#vBinary{flex:1;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:var(--text-d)}
+#vBinary{flex:1;align-items:center;justify-content:center;flex-direction:column;gap:16px;color:var(–text-d)}
 .bin-icon{font-size:48px;opacity:.3}
 .bin-info{text-align:center;line-height:2}
-.bin-info b{color:var(--text);display:block;font-size:14px;margin-bottom:4px}
+.bin-info b{color:var(–text);display:block;font-size:14px;margin-bottom:4px}
 
 /* ══ FILE CONVERTER VIEW ══ */
 .drop-zone{
-  flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
-  border:2px dashed var(--border2);border-radius:10px;margin:20px;cursor:pointer;
-  color:var(--text-d);font-size:12px;gap:8px;transition:all .15s;
+flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;
+border:2px dashed var(–border2);border-radius:10px;margin:20px;cursor:pointer;
+color:var(–text-d);font-size:12px;gap:8px;transition:all .15s;
 }
-.drop-zone:hover,.drop-zone.over{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.03)}
+.drop-zone:hover,.drop-zone.over{border-color:var(–accent);color:var(–accent);background:rgba(0,212,255,.03)}
 .dz-icon{font-size:36px;opacity:.3}
-#convBody{padding:16px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
-.conv-header{display:flex;align-items:center;gap:12px;background:var(--s1);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:12px}
+#convBody{padding:16px;overflow-y:auto;scrollbar-width:thin;scrollbar-color:var(–border) transparent}
+.conv-header{display:flex;align-items:center;gap:12px;background:var(–s1);border:1px solid var(–border);border-radius:8px;padding:12px 14px;margin-bottom:12px}
 .conv-filetype{width:44px;height:44px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;flex-shrink:0;letter-spacing:.03em}
 .conv-filemeta{flex:1;min-width:0}
-.conv-filename{color:var(--text-b);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.conv-fileinfo{color:var(--text-d);font-size:10px;margin-top:2px}
-.conv-section{background:var(--s1);border:1px solid var(--border);border-radius:8px;margin-bottom:10px;overflow:hidden}
-.conv-section-title{padding:8px 12px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(--text-d);border-bottom:1px solid var(--border);background:var(--s2);display:flex;align-items:center;gap:6px}
+.conv-filename{color:var(–text-b);font-size:12px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.conv-fileinfo{color:var(–text-d);font-size:10px;margin-top:2px}
+.conv-section{background:var(–s1);border:1px solid var(–border);border-radius:8px;margin-bottom:10px;overflow:hidden}
+.conv-section-title{padding:8px 12px;font-size:9px;letter-spacing:.1em;text-transform:uppercase;color:var(–text-d);border-bottom:1px solid var(–border);background:var(–s2);display:flex;align-items:center;gap:6px}
 .conv-section-body{padding:10px 12px}
 .conv-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:6px}
 .conv-btn{
-  background:var(--s2);border:1px solid var(--border);color:var(--text);
-  padding:7px 8px;border-radius:5px;cursor:pointer;font-family:'JetBrains Mono',monospace;
-  font-size:10px;text-align:center;transition:all .13s;
+background:var(–s2);border:1px solid var(–border);color:var(–text);
+padding:7px 8px;border-radius:5px;cursor:pointer;font-family:‘JetBrains Mono’,monospace;
+font-size:10px;text-align:center;transition:all .13s;
 }
-.conv-btn:hover{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.05)}
-.conv-btn .cb-to{font-size:8px;color:var(--text-d);display:block;margin-top:2px}
-.hex-table{font-size:10px;line-height:1.9;word-break:break-all;color:var(--text-d);max-height:200px;overflow-y:auto}
+.conv-btn:hover{border-color:var(–accent);color:var(–accent);background:rgba(0,212,255,.05)}
+.conv-btn .cb-to{font-size:8px;color:var(–text-d);display:block;margin-top:2px}
+.hex-table{font-size:10px;line-height:1.9;word-break:break-all;color:var(–text-d);max-height:200px;overflow-y:auto}
 .hex-row{display:flex;gap:12px}
 .hex-addr{color:#1e4060;flex-shrink:0;width:52px}
-.hex-bytes{flex:1;color:var(--text);letter-spacing:.08em;word-break:break-all}
-.hex-ascii{color:var(--green);letter-spacing:.04em;width:130px;flex-shrink:0}
-.struct-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(--border);font-size:10px}
+.hex-bytes{flex:1;color:var(–text);letter-spacing:.08em;word-break:break-all}
+.hex-ascii{color:var(–green);letter-spacing:.04em;width:130px;flex-shrink:0}
+.struct-row{display:flex;gap:8px;padding:3px 0;border-bottom:1px solid var(–border);font-size:10px}
 .struct-row:last-child{border:none}
-.struct-key{color:var(--accent);flex:0 0 140px;flex-shrink:0}
-.struct-val{color:var(--text);word-break:break-all}
-.conv-preview{max-height:160px;overflow:auto;border:1px solid var(--border);border-radius:4px;padding:8px;background:var(--bg);font-size:10px;line-height:1.6}
+.struct-key{color:var(–accent);flex:0 0 140px;flex-shrink:0}
+.struct-val{color:var(–text);word-break:break-all}
+.conv-preview{max-height:160px;overflow:auto;border:1px solid var(–border);border-radius:4px;padding:8px;background:var(–bg);font-size:10px;line-height:1.6}
 .conv-preview img{max-width:100%;max-height:140px;object-fit:contain}
-.tag-pill{display:inline-block;background:rgba(0,212,255,.08);color:var(--accent);border:1px solid rgba(0,212,255,.15);padding:1px 7px;border-radius:10px;font-size:9px;margin:2px}
-.not-supported{color:var(--text-d);font-size:10px;font-style:italic;padding:4px 0}
+.tag-pill{display:inline-block;background:rgba(0,212,255,.08);color:var(–accent);border:1px solid rgba(0,212,255,.15);padding:1px 7px;border-radius:10px;font-size:9px;margin:2px}
+.not-supported{color:var(–text-d);font-size:10px;font-style:italic;padding:4px 0}
 
 #togglePanel{
-  position:absolute;left:0;top:50%;transform:translateY(-50%);
-  background:var(--s2);border:1px solid var(--border);border-left:none;
-  color:var(--text-d);cursor:pointer;padding:10px 3px;border-radius:0 4px 4px 0;
-  font-size:10px;z-index:10;transition:all .15s;writing-mode:vertical-rl;
+position:absolute;left:0;top:50%;transform:translateY(-50%);
+background:var(–s2);border:1px solid var(–border);border-left:none;
+color:var(–text-d);cursor:pointer;padding:10px 3px;border-radius:0 4px 4px 0;
+font-size:10px;z-index:10;transition:all .15s;writing-mode:vertical-rl;
 }
-#togglePanel:hover{color:var(--accent);border-color:var(--accent)}
+#togglePanel:hover{color:var(–accent);border-color:var(–accent)}
 
 /* ══ CONVERTER VIEW ══ */
-#vConverter{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(--border) transparent;flex-direction:column;gap:14px}
-.conv-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(--s1);border:1px solid var(--border);border-radius:7px}
+#vConverter{flex:1;overflow-y:auto;padding:18px;scrollbar-width:thin;scrollbar-color:var(–border) transparent;flex-direction:column;gap:14px}
+.conv-header{display:flex;align-items:center;gap:12px;padding:14px 16px;background:var(–s1);border:1px solid var(–border);border-radius:7px}
 .conv-icon{font-size:28px;flex-shrink:0}
-.conv-title{font-family:'Syne',sans-serif;font-size:15px;color:var(--text-b);font-weight:700}
-.conv-sub{font-size:10px;color:var(--text-d);margin-top:2px}
+.conv-title{font-family:‘Syne’,sans-serif;font-size:15px;color:var(–text-b);font-weight:700}
+.conv-sub{font-size:10px;color:var(–text-d);margin-top:2px}
 .conv-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
-.conv-card{background:var(--s1);border:1px solid var(--border);border-radius:6px;padding:12px;cursor:pointer;transition:all .15s}
-.conv-card:hover{border-color:var(--accent);background:rgba(0,212,255,.04)}
-.conv-card.active{border-color:var(--accent);background:rgba(0,212,255,.08)}
-.conv-card-title{font-size:11px;color:var(--text-b);margin-bottom:3px}
-.conv-card-sub{font-size:9px;color:var(--text-d)}
+.conv-card{background:var(–s1);border:1px solid var(–border);border-radius:6px;padding:12px;cursor:pointer;transition:all .15s}
+.conv-card:hover{border-color:var(–accent);background:rgba(0,212,255,.04)}
+.conv-card.active{border-color:var(–accent);background:rgba(0,212,255,.08)}
+.conv-card-title{font-size:11px;color:var(–text-b);margin-bottom:3px}
+.conv-card-sub{font-size:9px;color:var(–text-d)}
 .conv-actions{display:flex;gap:7px;flex-wrap:wrap}
-.conv-out{background:var(--s1);border:1px solid var(--border);border-radius:6px;overflow:hidden}
-.conv-out-bar{background:var(--s2);padding:6px 12px;font-size:9px;color:var(--text-d);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(--border)}
-.conv-out-content{padding:12px;font-size:11px;line-height:1.65;max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;scrollbar-width:thin;scrollbar-color:var(--border) transparent}
+.conv-out{background:var(–s1);border:1px solid var(–border);border-radius:6px;overflow:hidden}
+.conv-out-bar{background:var(–s2);padding:6px 12px;font-size:9px;color:var(–text-d);display:flex;align-items:center;gap:8px;border-bottom:1px solid var(–border)}
+.conv-out-content{padding:12px;font-size:11px;line-height:1.65;max-height:320px;overflow-y:auto;white-space:pre-wrap;word-break:break-all;scrollbar-width:thin;scrollbar-color:var(–border) transparent}
 .hex-row{display:flex;gap:6px;font-size:10px;line-height:1.8}
-.hex-addr{color:var(--text-d);user-select:none;flex-shrink:0;width:52px}
-.hex-bytes{color:var(--accent);flex:1;letter-spacing:.06em}
-.hex-ascii{color:var(--green);flex-shrink:0;width:130px;letter-spacing:.04em}
+.hex-addr{color:var(–text-d);user-select:none;flex-shrink:0;width:52px}
+.hex-bytes{color:var(–accent);flex:1;letter-spacing:.06em}
+.hex-ascii{color:var(–green);flex-shrink:0;width:130px;letter-spacing:.04em}
 .pe-section{margin-bottom:10px}
-.pe-key{color:var(--text-d);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
-.pe-val{color:var(--text-b);font-size:11px;margin-top:1px}
+.pe-key{color:var(–text-d);font-size:9px;letter-spacing:.08em;text-transform:uppercase}
+.pe-val{color:var(–text-b);font-size:11px;margin-top:1px}
 .pe-table{width:100%;border-collapse:collapse;font-size:10px;margin-top:6px}
-.pe-table th{background:var(--s2);color:var(--accent);padding:4px 8px;text-align:left;font-size:9px;letter-spacing:.06em}
-.pe-table td{padding:4px 8px;border-bottom:1px solid var(--border);color:var(--text)}
-.zip-entry{display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(--border);font-size:10px}
+.pe-table th{background:var(–s2);color:var(–accent);padding:4px 8px;text-align:left;font-size:9px;letter-spacing:.06em}
+.pe-table td{padding:4px 8px;border-bottom:1px solid var(–border);color:var(–text)}
+.zip-entry{display:flex;align-items:center;gap:8px;padding:5px 8px;border-bottom:1px solid var(–border);font-size:10px}
 .zip-entry:last-child{border:none}
-.zip-name{flex:1;color:var(--text-b)}
-.zip-size{color:var(--text-d);flex-shrink:0}
-.zip-ext{background:var(--s3);border:1px solid var(--border);border-radius:3px;padding:1px 5px;font-size:9px;color:var(--accent)}
+.zip-name{flex:1;color:var(–text-b)}
+.zip-size{color:var(–text-d);flex-shrink:0}
+.zip-ext{background:var(–s3);border:1px solid var(–border);border-radius:3px;padding:1px 5px;font-size:9px;color:var(–accent)}
 .img-preview{max-width:100%;max-height:200px;object-fit:contain;border-radius:4px;display:block;margin:0 auto}
-.drop-zone{border:2px dashed var(--border);border-radius:8px;padding:40px;text-align:center;color:var(--text-d);font-size:11px;transition:all .15s;cursor:pointer}
-.drop-zone:hover,.drop-zone.drag-over{border-color:var(--accent);color:var(--accent);background:rgba(0,212,255,.03)}
+.drop-zone{border:2px dashed var(–border);border-radius:8px;padding:40px;text-align:center;color:var(–text-d);font-size:11px;transition:all .15s;cursor:pointer}
+.drop-zone:hover,.drop-zone.drag-over{border-color:var(–accent);color:var(–accent);background:rgba(0,212,255,.03)}
 .drop-zone .dz-icon{font-size:36px;margin-bottom:10px;opacity:.3}
 </style>
+
 </head>
 <body>
 
 <!-- ── TOPBAR ── -->
+
 <div id="topbar">
   <div class="topbar-row1">
     <div class="logo">NEXUS <em>LOADER v2</em></div>
@@ -325,6 +342,7 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 </div>
 
 <!-- ── STATUSBAR ── -->
+
 <div id="statusbar">
   <div class="sdot" id="sdot"></div>
   <div id="stext">Ready — enter a URL above</div>
@@ -337,9 +355,11 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
 </div>
 
 <!-- ── MAIN ── -->
+
 <div id="main">
 
   <!-- SIDE PANEL -->
+
   <div id="sidePanel">
     <div class="panel-tab-bar">
       <div class="ptab active" data-pt="0" onclick="switchPTab(0)">Headers</div>
@@ -349,179 +369,191 @@ body{font-family:'JetBrains Mono',monospace;background:var(--bg);color:var(--tex
       <div class="ptab" data-pt="4" onclick="switchPTab(4)">Info</div>
     </div>
 
-    <!-- Headers tab -->
-    <div class="panel-body" id="pt0">
-      <div class="panel-section">
-        <div class="panel-label">Custom Request Headers</div>
-        <div id="headerRows"></div>
-        <button class="btn sm" onclick="addHeaderRow()" style="margin-top:4px">+ Add Header</button>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Quick Presets</div>
-        <div style="display:flex;flex-wrap:wrap;gap:4px">
-          <button class="btn sm" onclick="addPreset('Authorization','Bearer YOUR_TOKEN')">Auth Bearer</button>
-          <button class="btn sm" onclick="addPreset('X-API-Key','YOUR_KEY')">API Key</button>
-          <button class="btn sm" onclick="addPreset('Accept','application/json')">JSON Accept</button>
-          <button class="btn sm" onclick="addPreset('User-Agent','Mozilla/5.0')">User-Agent</button>
-        </div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Note</div>
-        <div class="info-box">Headers are forwarded via proxy only. Direct loads use browser defaults (CORS applies).</div>
-      </div>
+```
+<!-- Headers tab -->
+<div class="panel-body" id="pt0">
+  <div class="panel-section">
+    <div class="panel-label">Custom Request Headers</div>
+    <div id="headerRows"></div>
+    <button class="btn sm" onclick="addHeaderRow()" style="margin-top:4px">+ Add Header</button>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Quick Presets</div>
+    <div style="display:flex;flex-wrap:wrap;gap:4px">
+      <button class="btn sm" onclick="addPreset('Authorization','Bearer YOUR_TOKEN')">Auth Bearer</button>
+      <button class="btn sm" onclick="addPreset('X-API-Key','YOUR_KEY')">API Key</button>
+      <button class="btn sm" onclick="addPreset('Accept','application/json')">JSON Accept</button>
+      <button class="btn sm" onclick="addPreset('User-Agent','Mozilla/5.0')">User-Agent</button>
     </div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Note</div>
+    <div class="info-box">Headers are forwarded via proxy only. Direct loads use browser defaults (CORS applies).</div>
+  </div>
+</div>
 
-    <!-- Cookies tab -->
-    <div class="panel-body" id="pt1" style="display:none">
-      <div class="panel-section">
-        <div class="panel-label">Cookie String</div>
-        <textarea class="cookie-area" id="cookieInput" placeholder="name=value; session=abc123; token=xyz..."></textarea>
-        <div style="margin-top:6px;display:flex;gap:5px">
-          <button class="btn sm" onclick="clearCookies()">Clear</button>
-          <button class="btn sm" onclick="parseCookieKV()">→ Parse KV</button>
-        </div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Parsed Pairs</div>
-        <div id="cookieKVRows"></div>
-        <button class="btn sm" onclick="addCookieKV()" style="margin-top:4px">+ Add Cookie</button>
-      </div>
-      <div class="panel-section">
-        <div class="info-box"><b>⚠ Browser Limitation</b><br>Real Set-Cookie injection is blocked cross-origin. Cookies here are sent as a <code>Cookie:</code> header through the proxy — this works for APIs and simple auth, but not full session-based sites.</div>
-      </div>
+<!-- Cookies tab -->
+<div class="panel-body" id="pt1" style="display:none">
+  <div class="panel-section">
+    <div class="panel-label">Cookie String</div>
+    <textarea class="cookie-area" id="cookieInput" placeholder="name=value; session=abc123; token=xyz..."></textarea>
+    <div style="margin-top:6px;display:flex;gap:5px">
+      <button class="btn sm" onclick="clearCookies()">Clear</button>
+      <button class="btn sm" onclick="parseCookieKV()">→ Parse KV</button>
     </div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Parsed Pairs</div>
+    <div id="cookieKVRows"></div>
+    <button class="btn sm" onclick="addCookieKV()" style="margin-top:4px">+ Add Cookie</button>
+  </div>
+  <div class="panel-section">
+    <div class="info-box"><b>⚠ Browser Limitation</b><br>Real Set-Cookie injection is blocked cross-origin. Cookies here are sent as a <code>Cookie:</code> header through the proxy — this works for APIs and simple auth, but not full session-based sites.</div>
+  </div>
+</div>
 
-    <!-- Proxies tab -->
-    <div class="panel-body" id="pt2" style="display:none">
-      <div class="panel-section">
-        <div class="panel-label">CORS Proxy Fallback Chain</div>
-        <div class="info-box" style="margin-bottom:8px">Proxies are tried in order. Failed ones are skipped automatically.</div>
-        <div class="proxy-list" id="proxyList"></div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Custom Proxy URL</div>
-        <div class="kv-row">
-          <input id="customProxyInput" placeholder="https://cors.example.com/get?url=">
-          <button class="btn sm" onclick="addCustomProxy()">Add</button>
-        </div>
-        <div class="info-box">URL should accept ?url= or append target URL at end. We'll try both formats.</div>
-      </div>
+<!-- Proxies tab -->
+<div class="panel-body" id="pt2" style="display:none">
+  <div class="panel-section">
+    <div class="panel-label">CORS Proxy Fallback Chain</div>
+    <div class="info-box" style="margin-bottom:8px">Proxies are tried in order. Failed ones are skipped automatically.</div>
+    <div class="proxy-list" id="proxyList"></div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Custom Proxy URL</div>
+    <div class="kv-row">
+      <input id="customProxyInput" placeholder="https://cors.example.com/get?url=">
+      <button class="btn sm" onclick="addCustomProxy()">Add</button>
     </div>
+    <div class="info-box">URL should accept ?url= or append target URL at end. We'll try both formats.</div>
+  </div>
+</div>
 
-    <!-- Incognito / Encryption tab -->
-    <div class="panel-body" id="pt3" style="display:none">
-      <div class="panel-section">
-        <div class="panel-label">Incognito Mode</div>
-        <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;margin-bottom:8px">
-          <div style="flex:1">
-            <div id="incogLabel" style="font-size:11px;color:var(--text-d)">Off — plaintext mode</div>
-            <div style="font-size:9px;color:var(--text-d);margin-top:2px">AES-256-GCM in-memory</div>
-          </div>
-          <div id="incogToggle" onclick="toggleIncognito()" style="
-            width:36px;height:20px;border-radius:10px;background:var(--border2);
-            cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:1px solid var(--border)">
-            <div id="incogKnob" style="
-              position:absolute;top:2px;left:2px;width:14px;height:14px;
-              border-radius:50%;background:var(--text-d);transition:all .2s"></div>
-          </div>
-        </div>
-        <div id="incogStatus" class="info-box" style="line-height:1.8">
-          Incognito mode is <b style="color:var(--text-d)">off</b>.<br>
-          Content stored as plaintext in memory.
-        </div>
+<!-- Incognito / Encryption tab -->
+<div class="panel-body" id="pt3" style="display:none">
+  <div class="panel-section">
+    <div class="panel-label">Incognito Mode</div>
+    <div style="display:flex;align-items:center;gap:10px;padding:8px;background:var(--bg);border:1px solid var(--border);border-radius:5px;margin-bottom:8px">
+      <div style="flex:1">
+        <div id="incogLabel" style="font-size:11px;color:var(--text-d)">Off — plaintext mode</div>
+        <div style="font-size:9px;color:var(--text-d);margin-top:2px">AES-256-GCM in-memory</div>
       </div>
-      <div class="panel-section">
-        <div class="panel-label">Session Key</div>
-        <div id="keyDisplay" style="
-          background:var(--bg);border:1px solid var(--border);border-radius:4px;
-          padding:6px 8px;font-size:9px;color:var(--text-d);word-break:break-all;
-          line-height:1.6;min-height:28px">
-          No key — incognito off
-        </div>
-        <div style="display:flex;gap:5px;margin-top:6px">
-          <button class="btn sm" onclick="rotateKey()" id="btnRotate" disabled>↻ Rotate Key</button>
-          <button class="btn sm" onclick="purgeSession()" id="btnPurge" disabled style="border-color:var(--red);color:var(--red)">✕ Purge</button>
-        </div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">What this does</div>
-        <div class="info-box" style="line-height:1.75">
-          <b>When ON:</b><br>
-          · Response body is AES-256-GCM encrypted immediately after fetch, before being held in memory<br>
-          · Raw plaintext is zeroed out after encryption<br>
-          · Decrypted only at render time, held briefly then discarded<br>
-          · Session key lives only in this tab — never written to disk, localStorage, or logs<br>
-          · On tab close or Purge, key and ciphertext are wiped<br><br>
-          <b>Network bytes</b> still travel to your device (unavoidable in a browser) but the response body is never plaintext in JS memory for more than milliseconds.
-        </div>
+      <div id="incogToggle" onclick="toggleIncognito()" style="
+        width:36px;height:20px;border-radius:10px;background:var(--border2);
+        cursor:pointer;position:relative;transition:background .2s;flex-shrink:0;border:1px solid var(--border)">
+        <div id="incogKnob" style="
+          position:absolute;top:2px;left:2px;width:14px;height:14px;
+          border-radius:50%;background:var(--text-d);transition:all .2s"></div>
       </div>
     </div>
+    <div id="incogStatus" class="info-box" style="line-height:1.8">
+      Incognito mode is <b style="color:var(--text-d)">off</b>.<br>
+      Content stored as plaintext in memory.
+    </div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Session Key</div>
+    <div id="keyDisplay" style="
+      background:var(--bg);border:1px solid var(--border);border-radius:4px;
+      padding:6px 8px;font-size:9px;color:var(--text-d);word-break:break-all;
+      line-height:1.6;min-height:28px">
+      No key — incognito off
+    </div>
+    <div style="display:flex;gap:5px;margin-top:6px">
+      <button class="btn sm" onclick="rotateKey()" id="btnRotate" disabled>↻ Rotate Key</button>
+      <button class="btn sm" onclick="purgeSession()" id="btnPurge" disabled style="border-color:var(--red);color:var(--red)">✕ Purge</button>
+    </div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">What this does</div>
+    <div class="info-box" style="line-height:1.75">
+      <b>When ON:</b><br>
+      · Response body is AES-256-GCM encrypted immediately after fetch, before being held in memory<br>
+      · Raw plaintext is zeroed out after encryption<br>
+      · Decrypted only at render time, held briefly then discarded<br>
+      · Session key lives only in this tab — never written to disk, localStorage, or logs<br>
+      · On tab close or Purge, key and ciphertext are wiped<br><br>
+      <b>Network bytes</b> still travel to your device (unavoidable in a browser) but the response body is never plaintext in JS memory for more than milliseconds.
+    </div>
+  </div>
+</div>
 
-    <!-- Info tab -->
-    <div class="panel-body" id="pt4" style="display:none">
-      <div class="panel-section">
-        <div class="panel-label">Last Response Info</div>
-        <div id="infoBox" class="info-box" style="line-height:2">No request made yet.</div>
-      </div>
-      <div class="panel-section">
-        <div class="panel-label">Supported Types</div>
-        <div class="info-box" style="line-height:2">
-          <b>HTML</b> — rendered iframe<br>
-          <b>JS / CSS / XML</b> — syntax highlighted<br>
-          <b>JSON</b> — collapsible tree<br>
-          <b>Markdown</b> — rendered<br>
-          <b>Images</b> — inline preview<br>
-          <b>Binary</b> — auto-download prompt
-        </div>
-      </div>
+<!-- Info tab -->
+<div class="panel-body" id="pt4" style="display:none">
+  <div class="panel-section">
+    <div class="panel-label">Last Response Info</div>
+    <div id="infoBox" class="info-box" style="line-height:2">No request made yet.</div>
+  </div>
+  <div class="panel-section">
+    <div class="panel-label">Supported Types</div>
+    <div class="info-box" style="line-height:2">
+      <b>HTML</b> — rendered iframe<br>
+      <b>JS / CSS / XML</b> — syntax highlighted<br>
+      <b>JSON</b> — collapsible tree<br>
+      <b>Markdown</b> — rendered<br>
+      <b>Images</b> — inline preview<br>
+      <b>Binary</b> — auto-download prompt
     </div>
+  </div>
+</div>
+```
+
   </div>
 
   <!-- CONTENT -->
+
   <div id="content">
     <button id="togglePanel" onclick="togglePanel()">panel</button>
 
-    <div class="view active" id="vTerminal"></div>
+```
+<div class="view active" id="vTerminal"></div>
 
-    <div class="view" id="vCode">
-      <pre><code id="codeBlock"></code></pre>
-    </div>
+<div class="view" id="vCode">
+  <pre><code id="codeBlock"></code></pre>
+</div>
 
-    <div class="view" id="vJson">
-      <div class="jt" id="jsonTree"></div>
-    </div>
+<div class="view" id="vJson">
+  <div class="jt" id="jsonTree"></div>
+</div>
 
-    <div class="view" id="vHtml">
-      <!-- sandbox relaxed for embeds: allow-presentation needed for YT fullscreen, allow-popups for Twitter widget -->
-      <iframe id="htmlFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"></iframe>
-    </div>
+<div class="view" id="vHtml">
+  <!-- sandbox relaxed for embeds: allow-presentation needed for YT fullscreen, allow-popups for Twitter widget -->
+  <iframe id="htmlFrame" sandbox="allow-scripts allow-same-origin allow-forms allow-presentation allow-popups allow-popups-to-escape-sandbox" allow="autoplay; encrypted-media; fullscreen; picture-in-picture; clipboard-write"></iframe>
+</div>
 
-    <div class="view" id="vImage">
-      <img id="imgEl" alt="">
-    </div>
+<div class="view" id="vImage">
+  <img id="imgEl" alt="">
+</div>
 
-    <div class="view" id="vMarkdown"></div>
+<div class="view" id="vMarkdown"></div>
 
-    <div class="view" id="vBinary">
-      <div class="bin-icon">⬡</div>
-      <div class="bin-info">
-        <b id="binName">binary file</b>
-        <span id="binSize"></span>
-        <span id="binType" style="color:var(--accent)"></span>
-        <button class="btn" id="binDlBtn" onclick="downloadContent()" style="margin-top:12px">↓ Download File</button>
-      </div>
-    </div>
-
-    <!-- ── FILE CONVERTER VIEW ── -->
-    <div class="view" id="vConverter">
-      <div class="drop-zone" id="dropZone" onclick="$('fileInput').click()" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
-        <div class="dz-icon">⬆</div>
-        <div>Drop any file here or click to browse</div>
-        <div style="font-size:9px;margin-top:6px;color:var(--text-d)">Images · Text · JSON · CSV · XML · ZIP · PE/DLL/EXE · XEX · Binary · and more</div>
-      </div>
-      <div id="convBody" style="display:none;flex-direction:column;gap:12px;flex:1"></div>
-    </div>
+<div class="view" id="vBinary">
+  <div class="bin-icon">⬡</div>
+  <div class="bin-info">
+    <b id="binName">binary file</b>
+    <span id="binSize"></span>
+    <span id="binType" style="color:var(--accent)"></span>
+    <button class="btn" id="binDlBtn" onclick="downloadContent()" style="margin-top:12px">↓ Download File</button>
   </div>
+</div>
+
+<!-- ── FILE CONVERTER VIEW ── -->
+<div class="view" id="vConverter">
+  <div class="drop-zone" id="dropZone" onclick="$('fileInput').click()" ondragover="dzOver(event)" ondragleave="dzLeave(event)" ondrop="dzDrop(event)">
+    <div class="dz-icon">⬆</div>
+    <div>Drop any file here or click to browse</div>
+    <div style="font-size:9px;margin-top:6px;color:var(--text-d)">Images · Text · JSON · CSV · XML · ZIP · PE/DLL/EXE · XEX · Binary · and more</div>
+  </div>
+  <div id="convBody" style="display:none;flex-direction:column;gap:12px;flex:1"></div>
+</div>
+```
+
+  </div>
+</div>
+<!-- Toast notification -->
+<div id="nexusToast">
+  <span class="t-icon" id="toastIcon">⬡</span>
+  <div><div class="t-msg" id="toastMsg"></div><div class="t-sub" id="toastSub"></div></div>
 </div>
 
 <script>
@@ -565,8 +597,64 @@ async function init() {
   await generateKeyPair();
   renderWorkerPanel();
   addHeaderRow();
-  tlog('ECDH keypair ready. Set your Worker URL in the panel to begin.', 'ok');
-  if(!WORKER_URL) tlog('⚠ No Worker URL set — open ⚙ panel → Worker tab', 'warn');
+  tlog('ECDH keypair ready.', 'ok');
+  if(!WORKER_URL) {
+    tlog('⚠ No Worker URL set — open ⚙ panel → Worker tab', 'warn');
+  } else {
+    // Auto-ping on load — shows toast when worker responds
+    setTimeout(function() { pingWorker(false); }, 600);
+  }
+}
+
+// ══════════════════════════════════════════════
+//  TOAST SYSTEM
+// ══════════════════════════════════════════════
+function showToast(icon, msg, sub, colorVar, duration) {
+  duration = duration || 3500;
+  var t  = document.getElementById('nexusToast');
+  var ti = document.getElementById('toastIcon');
+  var tm = document.getElementById('toastMsg');
+  var ts = document.getElementById('toastSub');
+  if(!t) return;
+  ti.textContent = icon;
+  tm.textContent = msg;
+  ts.textContent = sub || '';
+  t.style.borderColor = colorVar || 'var(--border)';
+  t.style.color = colorVar || 'var(--text)';
+  clearTimeout(t._timer);
+  t.classList.add('show');
+  t._timer = setTimeout(function() { t.classList.remove('show'); }, duration);
+}
+
+// ══════════════════════════════════════════════
+//  WORKER PING / HANDSHAKE
+// ══════════════════════════════════════════════
+async function pingWorker(silent) {
+  if(!WORKER_URL) {
+    if(!silent) showToast('⚠', 'No Worker URL set', 'Open ⚙ panel → Worker tab', 'var(--yellow)', 4000);
+    return false;
+  }
+  try {
+    var res = await fetch(WORKER_URL + '/ping', { method: 'GET' });
+    if(!res.ok) throw new Error('HTTP ' + res.status);
+    var data = await res.json();
+    if(!data.nexus) throw new Error('Not a Nexus worker');
+
+    var timeStr = data.timestamp ? data.timestamp.slice(11,19) + ' UTC' : '';
+    showToast('⬡', 'Worker Online', data.message + (timeStr ? ' · ' + timeStr : ''), 'var(--green)', 4500);
+    tlog('Worker handshake OK — ' + data.algo, 'ok');
+
+    var ws = document.getElementById('workerStatus');
+    if(ws) ws.innerHTML = '<span style="color:var(--green)">✓ Online · ' +
+      (data.timestamp ? data.timestamp.slice(0,19).replace("T"," ") + ' UTC' : 'connected') + '</span>';
+    return true;
+  } catch(err) {
+    if(!silent) {
+      showToast('✕', 'Worker Unreachable', err.message, 'var(--red)', 5000);
+      tlog('Ping failed: ' + err.message, 'err');
+    }
+    return false;
+  }
 }
 
 // ══════════════════════════════════════════════
@@ -884,6 +972,7 @@ function saveWorkerUrl() {
     ? '<span style="color:var(--green)">✓ Saved: ' + esc(WORKER_URL) + '</span>'
     : '<span style="color:var(--red)">Cleared</span>';
   tlog('Worker URL ' + (WORKER_URL ? 'set: ' + WORKER_URL : 'cleared'), WORKER_URL ? 'ok' : 'warn');
+  if(WORKER_URL) setTimeout(function() { pingWorker(false); }, 300);
 }
 
 async function rotateKeys() {
@@ -965,6 +1054,53 @@ function clearCookies() { const el=$('cookieInput'); if(el) el.value=''; }
 function parseCookieKV() {}
 function addCustomProxy() {}
 
+
+// ══════════════════════════════════════════════
+//  SHORTCUTS INJECTION ENTRY POINT
+//  Called by nexus-shortcut.js via "Run JavaScript on Webpage"
+//  nexusInject(content, contentType, sourceUrl)
+// ══════════════════════════════════════════════
+function nexusInject(data, contentType, sourceUrl) {
+  contentType = contentType || 'text/plain';
+  sourceUrl   = sourceUrl   || '';
+
+  tlog('[Shortcuts] Received content — ' + contentType + (sourceUrl ? ' from ' + sourceUrl : ''), 'info');
+
+  // Update URL bar to reflect where content came from
+  var urlEl = document.getElementById('urlInput');
+  if(urlEl && sourceUrl) urlEl.value = sourceUrl;
+
+  // Convert to Uint8Array for renderByType
+  var bytes;
+  if(typeof data === 'string') {
+    bytes = new TextEncoder().encode(data);
+  } else if(data instanceof ArrayBuffer) {
+    bytes = new Uint8Array(data);
+  } else {
+    bytes = new TextEncoder().encode(String(data));
+  }
+
+  // Store as blob so copy/download work
+  rawBlob = new Blob([bytes], { type: contentType });
+
+  // Enable action buttons
+  var btnCopy = document.getElementById('btnCopy');
+  var btnDl   = document.getElementById('btnDl');
+  if(btnCopy) btnCopy.disabled = false;
+  if(btnDl)   btnDl.disabled   = false;
+
+  // Render
+  renderByType(bytes, contentType, sourceUrl);
+
+  var size = bytes.length < 1024 ? bytes.length + 'B'
+           : bytes.length < 1048576 ? (bytes.length/1024).toFixed(1) + 'KB'
+           : (bytes.length/1048576).toFixed(2) + 'MB';
+
+  setStatus('ok', 'Shortcuts → ' + size + ' · ' + contentType.split(';')[0]);
+  showToast('⬡', 'Shortcuts loaded', size + ' · ' + contentType.split(';')[0], 'var(--green)', 4000);
+  tlog('Rendered ' + size + ' via Shortcuts', 'ok');
+}
+
 function copyContent() {
   if(!rawBlob) return;
   rawBlob.text().then(t => navigator.clipboard.writeText(t));
@@ -988,5 +1124,6 @@ function esc(s) {
   return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 </script>
+
 </body>
 </html>
